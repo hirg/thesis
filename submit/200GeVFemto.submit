@@ -1,0 +1,37 @@
+[paths]
+# Define some useful paths that get referenced later
+# This whole section is optional
+source = ~/200GeVFemtoAnalysis
+scratch = /gpfs/mnt/gpfs01/star/scratch/campbell
+output = ${scratch}/200GeV
+
+[job_attributes]
+datasetSplitting = fileBased
+simulateSubmission = false
+fileListSyntax = xrootd
+
+[package]
+package_name = ${paths:source}/femtoPackage.zip
+#files =
+#    ${paths:source}/AziFemAnalysisUU.C;
+#    ${paths:source}/StRoot;
+#    ${paths:source}/.sl64_gcc482
+
+[output]
+# Must write $JOBID with two dollar signs, the first one escapes the second
+stderr_path = ${paths:output}/logs/$$JOBID.err
+list =
+    *.log, ${paths:output}/logs/;
+    *.root, ${paths:output}/output/
+
+[input]
+files = 
+    /star/u/campbell/200GeVFemtoAnalysis/lists/AuAupionList.list, all, f
+commands =
+    cp foo bar;
+    root -b macro.C('inputFile.root', 'outputFile.root');
+    echo Hello World
+
+[generator]
+location = ${paths:output}/schedulerFiles
+report_location = ${paths:output}/schedulerFiles
