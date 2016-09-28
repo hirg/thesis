@@ -1,0 +1,3 @@
+[submodule "submit/starsubmit"]
+	path = submit/starsubmit
+	url = git@github.com:johnmarcampbell/starSubmit.git
