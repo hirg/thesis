@@ -1,3 +1,6 @@
 [submodule "submit/starsubmit"]
 	path = submit/starsubmit
 	url = git@github.com:johnmarcampbell/starSubmit.git
+[submodule "StRoot/ConfigReader"]
+	path = StRoot/ConfigReader
+	url = git@github.com:johnmarcampbell/cpp-configReader.git
