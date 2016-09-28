@@ -1,4 +1,4 @@
-from starsubmit import *
+from starsubmit.starsubmit import *
 
 filelist = '\\"$FILELIST\\"'
 n_bins = 5
