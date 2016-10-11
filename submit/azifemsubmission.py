@@ -10,7 +10,7 @@ macro = 'hbt/AziFemAnalysis.C'
 # species = 'UU'
 species = 'AuAu'
 submission_params_file = 'submit/azifemSubmit.params'
-n_events = 10000
+n_events = 999999
 
 n_zdcBins = 2
 n_q2OrMultBins = 2

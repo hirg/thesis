@@ -9,8 +9,8 @@ output = ${scratch}/200GeV
 datasetSplitting = fileBased
 simulateSubmission = false
 fileListSyntax = xrootd
-minFilesPerProcess = 10
-maxFilesPerProcess = 15
+minFilesPerProcess = 168
+maxFilesPerProcess = 170
 
 [package]
 package_name = femtoPackage
@@ -27,7 +27,7 @@ list =
 
 [input]
 files = 
-    ${paths:source}/hbt/AuAupions.list, 13, f
+    ${paths:source}/hbt/AuAupions.list, all, f
 commands =
     # cp foo bar;
     # root -b macro.C('inputFile.root', 'outputFile.root');
