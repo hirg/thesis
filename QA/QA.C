@@ -1,11 +1,12 @@
 class StMuEvent;
+class StMuDst;
 
 Bool_t checkTrigger(StMuEvent* event, vector<int>* triggers); 
 
 void QA(const TString fileList,
         const string configFile = "QA/19GeVQA.config",
         const TString outFile = "testOut.root",
-		Int_t nEvents = 999)
+		Int_t nEvents = 9999)
 {
 
 	TStopwatch* timer = new TStopwatch();
@@ -18,7 +19,10 @@ void QA(const TString fileList,
 
     // --- Read config file --- // 
     ConfigReader cr(configFile);
-    vector<int> triggers = cr.getVI("minbias", "triggers");
+    vector<int> triggers = cr.getVI("triggers", "193GeV");
+    Float_t VzCut = cr.getF("vz");
+    Float_t VrCut = cr.getF("vr");
+    Int_t zdcCut = cr.getI("zdc");
 
 	//----------------- Instantiate chain and MuDst reader ---------------//
 	StChain* chain = new StChain("StChain");
@@ -29,8 +33,13 @@ void QA(const TString fileList,
                                             "st:MuDst.root", 100, "MuDst");
     StRefMultCorr* refmultCorrUtil = new StRefMultCorr("refmult");
 
-    muMaker->chain()->SetBranchStatus("*",0);
-    muMaker->chain()->SetBranchStatus("MuEvent*",1);
+    muMaker->SetStatus("*",0);
+    muMaker->SetStatus("MuEventAll",1);
+    muMaker->SetStatus("BTofHeader",1);
+    
+    // muMaker->chain()->SetBranchStatus("*",0);
+    // muMaker->chain()->SetBranchStatus("MuEvent*",1);
+    // muMaker->chain()->SetBranchStatus("MuEvent*",1);
     
 	//----------------------- Make Histograms, etc. -----------------------//
 	TFile* fOut = new TFile(outFile.Data(), "RECREATE");
@@ -46,9 +55,17 @@ void QA(const TString fileList,
 	TH1I* hRefmult = new TH1I("hRefmult"," refmult", 800, -0.5, 800.5);
 	TH1F* hRefmultCorr = new TH1F("hRefmultCorr","refmultCOrr", 800, -0.5, 799.5);
     TH2I* hTofmultVsRefmult = new TH2I("hTofmultVsRefmult",
-            "ToF Multiplicity vs. Refmult", 800, -0.5, 799.5, 800, -0.5, 799.5);
+            "ToF Multiplicity vs. Refmult", 800, -0.5, 799.5, 800, -0.5, 1599.5);
 
+ 
+    TH1I* hAllCutsCumulative = new TH1I("hAllCutsCumulative",
+            "Cuts - Cumulative", 7, 0.5, 7.5);
+    const Char_t* binTitles[7] = {"All Events", "Good Run", "Trigger",
+            "Has Vertex", "V_{Z,TPC}", "V_{R}", "1% Zdc"};
 
+    // Set bin labels on cuts histogram
+    for(Int_t i = 0; i <= 6; i++)
+    { hAllCutsCumulative->GetXaxis()->SetBinLabel(i+1,binTitles[i]); }
 	//--------------------- The STAR chain Event loop ---------------------//
 	chain->Init();
 
@@ -68,6 +85,8 @@ void QA(const TString fileList,
          << " seconds elapsed so far. *****" << endl;
 
 	for (Int_t iev = 0; iev < nEvents; iev++) {
+        Bool_t goodRun = kFALSE, goodTrigger = kFALSE, goodZdc = kFALSE,
+                goodVz = kFALSE, goodDeltaVz = kFALSE, goodVr = kFALSE;
 
 		chain->Clear();
 		iReturn = chain->Make(iev); 
@@ -77,26 +96,56 @@ void QA(const TString fileList,
 			cout << "Exiting before we expected to!" << endl;
 			break;
 		}
+
+		++nEventsProcessed;
         
 		// Assign event quantities
 		StMuEvent* event = muMaker->muDst()->event();
-        checkTrigger(event, &triggers);
         Int_t runId = event->runId();
 		Float_t Vx = event->primaryVertexPosition().x();
 		Float_t Vy = event->primaryVertexPosition().y();
+        Float_t Vr = sqrt( Vx*Vx + Vy*Vy );
 		Float_t Vz = event->primaryVertexPosition().z();
-		Float_t vpdVz = event->vpdVz();
-		Float_t zdcW = event->zdcTriggerDetector().adc(0);
-		Float_t zdcE = event->zdcTriggerDetector().adc(4);
-        Float_t zdcRate = event->runInfo().zdcCoincidenceRate();
+		Float_t vpdVz = muMaker->muDst()->btofHeader()->vpdVz();
+		Int_t zdcW = event->zdcTriggerDetector().adc(0);
+		Int_t zdcE = event->zdcTriggerDetector().adc(4);
+        Int_t zdcRate = event->runInfo().zdcCoincidenceRate();
         Int_t refmult = event->refMult();
         Int_t tofMult = event->btofTrayMultiplicity();
 
+        hAllCutsCumulative->Fill(1); // All events
+
+        //Check for good events
         if( lastRunId != runId ) {
-            cout << event->runId() << endl;
             lastRunId = runId;
             refmultCorrUtil->init(runId);
         }
+
+        // Is this a good run?
+        goodRun = !(refmultCorrUtil->isBadRun(runId));
+        if( goodRun ) { hAllCutsCumulative->Fill(2); }
+        else { continue; }
+
+        // Does the event have the right trigger?
+        if( checkTrigger(event, &triggers) ) { hAllCutsCumulative->Fill(3); }
+        else { continue; }
+
+        // Does the event have a vertex?
+        if( Vz != 0.0 ) { hAllCutsCumulative->Fill(4); }
+        else { continue; }
+
+        // Does the event pass the Vz cut?
+        if( abs(Vz) <= VzCut ) { hAllCutsCumulative->Fill(5); }
+        else { continue; }
+        
+        // Does the event pass the Vr cut?
+        if( Vr <= VrCut ) { hAllCutsCumulative->Fill(6); }
+        else { continue; }
+
+        // Does the event pass the Zdc cut?
+        goodZdc = (zdcE <= zdcCut) && (zdcW <= zdcCut);
+        if(goodZdc) { hAllCutsCumulative->Fill(7); }
+        else { continue; }
 
         refmultCorrUtil->initEvent(refmult, Vz, zdcRate);
         Double_t refmultCorr = refmultCorrUtil->getRefMultCorr();
@@ -111,7 +160,6 @@ void QA(const TString fileList,
         hRefmultCorr->Fill(refmultCorr);
         hTofmultVsRefmult->Fill(refmult, tofMult);
 
-		nEventsProcessed++;
         checkProgress(iev, nEvents, &percentCounter, timer);
 
 
@@ -140,7 +188,6 @@ Bool_t checkTrigger(StMuEvent* event, vector<int>* triggers)
         if( event->triggerIdCollection().nominal().isTrigger(triggers->at(i)) )
         {
             hasTrigger = kTRUE;
-            cout << triggers->at(i) << endl;
         }
     }
 	
