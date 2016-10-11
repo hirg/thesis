@@ -132,7 +132,7 @@ public:
   unsigned int UncorrectedNumberOfNegativePrimaries() const;
   unsigned int UncorrectedNumberOfPrimaries() const;
   float q2() const;
-  Int_t Refmult() const;
+  Float_t Refmult() const;
   float ReactionPlane(const int& wgt=0) const;
   float ReactionPlaneError(const int& wgt=0) const;
   float ReactionPlaneSubEventDifference(const int& wgt=0) const;
@@ -158,7 +158,7 @@ public:
   void SetUncorrectedNumberOfNegativePrimaries(const unsigned int&); 
   void SetUncorrectedNumberOfPrimaries(const unsigned int&);
   void Setq2(const float&);
-  void SetRefmult(const Int_t&);
+  void SetRefmult(const Float_t&);
   void SetReactionPlane(const float&,const int& wgt=0);
   void SetReactionPlaneError(const float&, const int& wgt=0);
   void SetReactionPlaneSubEventDifference(const float&, const int& wgt=0);
@@ -186,7 +186,7 @@ private:
   unsigned int mUncorrectedNumberOfNegativePrimaries;
   unsigned int mUncorrectedNumberOfPrimaries;
   float mq2;
-  Int_t mRefmult;
+  Float_t mRefmult;
   float mReactionPlane[2]; //reaction plane/error  //   
   float mReactionPlanePtWgt[2]; //reaction plane/error with pT weight //     
   double mMagneticField; // magnetic field in Z direction

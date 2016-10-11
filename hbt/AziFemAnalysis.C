@@ -5,7 +5,7 @@
 
 #include <vector>
 
-void AziFemAnalysisUU(const TString fileList = "hbt/AuAupions.list",
+void AziFemAnalysis(const TString fileList = "hbt/AuAupions.list",
 					   const TString outFile = "aziFemTestOut.root",
 					   const Int_t q2Bin = 0,
 					   const Int_t multBin = -1,

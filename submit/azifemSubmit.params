@@ -1,7 +1,7 @@
 [paths]
 # Define some useful paths that get referenced later
 # This whole section is optional
-source = ~/200GeVFemtoAnalysis
+source = /star/u/campbell/thesisAnalysis
 scratch = /gpfs/mnt/gpfs01/star/scratch/campbell
 output = ${scratch}/200GeV
 
@@ -9,13 +9,14 @@ output = ${scratch}/200GeV
 datasetSplitting = fileBased
 simulateSubmission = false
 fileListSyntax = xrootd
+minFilesPerProcess = 10
+maxFilesPerProcess = 15
 
 [package]
-package_name = ${paths:source}/femtoPackage.zip
-#files =
-#    ${paths:source}/AziFemAnalysisUU.C;
-#    ${paths:source}/StRoot;
-#    ${paths:source}/.sl64_gcc482
+package_name = femtoPackage
+files =
+   ${paths:source}/hbt;
+   ${paths:source}/.sl64_gcc482
 
 [output]
 # Must write $JOBID with two dollar signs, the first one escapes the second
@@ -26,10 +27,10 @@ list =
 
 [input]
 files = 
-    /star/u/campbell/200GeVFemtoAnalysis/lists/AuAupionList.list, all, f
+    ${paths:source}/hbt/AuAupions.list, 13, f
 commands =
-    cp foo bar;
-    root -b macro.C('inputFile.root', 'outputFile.root');
+    # cp foo bar;
+    # root -b macro.C('inputFile.root', 'outputFile.root');
     echo Hello World
 
 [generator]

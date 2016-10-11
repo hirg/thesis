@@ -566,7 +566,7 @@ void StHbtEvent::SetUncorrectedNumberOfPositivePrimaries(const unsigned int& tra
 void StHbtEvent::SetUncorrectedNumberOfNegativePrimaries(const unsigned int& tracks){mUncorrectedNumberOfNegativePrimaries = tracks;}
 void StHbtEvent::SetUncorrectedNumberOfPrimaries(const unsigned int& tracks){mUncorrectedNumberOfPrimaries = tracks;}
 void StHbtEvent::Setq2(const float& q2){mq2 = q2;}
-void StHbtEvent::SetRefmult(const Int_t& refmult){mRefmult = refmult;}
+void StHbtEvent::SetRefmult(const Float_t& refmult){mRefmult = refmult;}
 void StHbtEvent::SetReactionPlane(const float& rp, const int& wgt){
   (wgt) ? mReactionPlanePtWgt[0]=rp : mReactionPlane[0]=rp;
 }
@@ -593,7 +593,7 @@ unsigned int StHbtEvent::UncorrectedNumberOfPositivePrimaries() const {return mU
 unsigned int StHbtEvent::UncorrectedNumberOfNegativePrimaries() const {return mUncorrectedNumberOfNegativePrimaries;}
 unsigned int StHbtEvent::UncorrectedNumberOfPrimaries() const {return mUncorrectedNumberOfPrimaries;}
 float StHbtEvent::q2() const {return mq2;}
-Int_t StHbtEvent::Refmult() const {return mRefmult;}
+Float_t StHbtEvent::Refmult() const {return mRefmult;}
 float StHbtEvent::ReactionPlane(const int& wgt) const { 
   return (wgt) ? mReactionPlanePtWgt[0] : mReactionPlane[0];
 }
