@@ -40,6 +40,16 @@ private:
 
   long mNEventsPassed;
   long mNEventsFailed;
+  long mVzPassed;
+  long mVrPassed;
+  long mMultPassed;
+  long mq2Passed;
+  long mZdcPassed;
+  long mVzFailed;
+  long mVrFailed;
+  long mMultFailed;
+  long mq2Failed;
+  long mZdcFailed;
 
 #ifdef __ROOT__
   ClassDef(fxtEventCut, 1)

@@ -28,7 +28,7 @@ fxtEventCutMonitor::fxtEventCutMonitor(const char* title1, const char* title2){
   mRefMult = new StHbt1DHisto(tit1, "RefMult", 1000, 0., 1000.);
 
   sprintf(tit1,"%s%s_q2",title1,title2);
-  mRefMult = new StHbt1DHisto(tit1, "q2", 1000, 0., 1000.);
+  mq2 = new StHbt1DHisto(tit1, "q2", 1000, 0., 1000.);
 
   sprintf(tit1,"%s%s_NumberOfTofMatches",title1,title2);
   mNumberOfTofMatches= new StHbt1DHisto(tit1, "NumberOfTofMatches", 500, 0., 500.);
@@ -50,7 +50,7 @@ void fxtEventCutMonitor::Fill(const StHbtEvent* event){
   mVertexYvsVertexX->Fill( event->PrimVertPos().x(), event->PrimVertPos().y(), 1.);
   mVertexZ->Fill( event->PrimVertPos().z(), 1.);
   mRefMult->Fill( event->Refmult(), 1.);
-  mRefMult->Fill( event->q2(), 1.);
+  mq2->Fill( event->q2(), 1.);
   mNumberOfTofMatches->Fill( event->NumberOfTofMatches(), 1.);
 
 }

@@ -7,6 +7,12 @@ ClassImp(fxtEventCut)
 
 fxtEventCut::fxtEventCut(){
   mNEventsPassed =  mNEventsFailed = 0;
+  mVzPassed =  mVzFailed = 0;
+  mVrPassed =  mVrFailed = 0;
+  mq2Passed =  mq2Failed = 0;
+  mMultPassed =  mMultFailed = 0;
+  mZdcPassed =  mZdcFailed = 0;
+
   mq2[0] = -1;
   mq2[1] = 100;
   mMult[0] = 0;
@@ -31,6 +37,12 @@ Bool_t fxtEventCut::Pass(const StHbtEvent* event){
   Int_t zdcW = event->ZdcAdcWest();
   Int_t zdcHigher = (zdcE > zdcW) ? zdcE : zdcW;
 
+  Bool_t goodq2 = (q2 > mq2[0]) && (q2 < mq2[1]);
+  Bool_t goodMult = (mult > mMult[0]) && (mult <= mMult[1]);
+  Bool_t goodZdc = (zdcHigher > mZdc[0]) && (zdcHigher <= mZdc[1]);
+  Bool_t goodVz = (Vz < mVz[1]) && (Vr < mVr);
+  Bool_t goodVr = (Vr < mVr);
+
   Bool_t goodEvent =
     ((q2 > mq2[0]) && 
      (q2 < mq2[1]) && 
@@ -48,6 +60,11 @@ Bool_t fxtEventCut::Pass(const StHbtEvent* event){
      (Vr < mVr));
 
   goodEvent ? mNEventsPassed++ : mNEventsFailed++ ;
+  goodVz ? mVzPassed++ : mVzFailed++ ;
+  goodVr ? mVrPassed++ : mVrFailed++ ;
+  goodZdc ? mZdcPassed++ : mZdcFailed++ ;
+  goodMult ? mMultPassed++ : mMultFailed++ ;
+  goodq2 ? mq2Passed++ : mq2Failed++ ;
   return (goodEvent);
 }
 //------------------------------
@@ -56,8 +73,10 @@ StHbtString fxtEventCut::Report(){
   char Ctemp[300];
   sprintf(Ctemp,"\nMultiplicity:\t %d-%d",mMult[0],mMult[1]);
   Stemp = Ctemp;
+  sprintf(Ctemp,"\nZdc:\t %d-%d",mZdc[0],mZdc[1]);
+  Stemp += Ctemp;
   sprintf(Ctemp,"\nq2:\t %f-%f",mq2[0],mq2[1]);
-  Stemp = Ctemp;
+  Stemp += Ctemp;
   sprintf(Ctemp,"\nMin Tof Matches:\t %d",mMinTofMatches);
   Stemp += Ctemp;
   sprintf(Ctemp,"\nVertex X-position:\t %E-%E",mVx[0],mVx[1]);
@@ -69,6 +88,18 @@ StHbtString fxtEventCut::Report(){
   sprintf(Ctemp,"\nVertex R-position:\t %E",mVr);
   Stemp += Ctemp;
   sprintf(Ctemp,"\nNumber of events which passed:\t%ld  Number which failed:\t%ld",mNEventsPassed,mNEventsFailed);
+  Stemp += Ctemp;
+  
+  // Individual cuts
+  sprintf(Ctemp,"\nNumber of events which passed Vz:\t%ld  Number which failed Vz:\t%ld",mVzPassed,mVzFailed);
+  Stemp += Ctemp;
+  sprintf(Ctemp,"\nNumber of events which passed Vr:\t%ld  Number which failed Vr:\t%ld",mVrPassed,mVrFailed);
+  Stemp += Ctemp;
+  sprintf(Ctemp,"\nNumber of events which passed q2:\t%ld  Number which failed q2:\t%ld",mq2Passed,mq2Failed);
+  Stemp += Ctemp;
+  sprintf(Ctemp,"\nNumber of events which passed mult:\t%ld  Number which failed mult:\t%ld",mMultPassed,mMultFailed);
+  Stemp += Ctemp;
+  sprintf(Ctemp,"\nNumber of events which passed zdc:\t%ld  Number which failed zdc:\t%ld",mZdcPassed,mZdcFailed);
   Stemp += Ctemp;
   StHbtString returnThis = Stemp;
   return returnThis;
