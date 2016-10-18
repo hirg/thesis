@@ -11,7 +11,7 @@ void AziFemAnalysis(const TString fileList = "hbt/AuAupions.list",
 					   const Int_t multBin = -1,
 					   const Int_t zdcBin = 0,
                        const string configFile = "hbt/femto.config",
-                       const string speciesString = "UU",
+                       const string speciesString = "AuAu",
 					   const Int_t nEvents = 999
                        )
 {
@@ -178,8 +178,8 @@ void AziFemAnalysis(const TString fileList = "hbt/AuAupions.list",
         qOslCFNarrow[i] = new QoslCMSCorrFctnkT(title.Data(),nQbins,qRange[0],qRange[1],nQbins,qRange[0],qRange[1],nQbins,qRange[0],qRange[1]);
         title+="_Wide";
         qOslCFWide[i] = new QoslCMSCorrFctnkT(title.Data(),nQbins,-2.,2,nQbins,-2.,2,nQbins,-2.,2);
-        azifemAnalysis[i]->AddCorrFctn(qOslCFNarrow[i]);
-        azifemAnalysis[i]->AddCorrFctn(qOslCFWide[i]);
+        // azifemAnalysis[i]->AddCorrFctn(qOslCFNarrow[i]);
+        // azifemAnalysis[i]->AddCorrFctn(qOslCFWide[i]);
         azifemAnalysis[i]->AddCorrFctn(qOslRPCF[i]);
     }
 
