@@ -476,7 +476,7 @@ void StHbtAnalysis::MakePairs(const char* typeIn, StHbtParticleCollection *partC
       // The following lines have to be uncommented if you want pairCutMonitors
       // they are not in for speed reasons
       bool tmpPassPair = mPairCut->Pass(ThePair);
-      mPairCut->FillCutMonitor(ThePair, tmpPassPair);
+      // mPairCut->FillCutMonitor(ThePair, tmpPassPair);
       if ( tmpPassPair )
         {
 
