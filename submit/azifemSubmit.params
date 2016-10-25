@@ -1,16 +1,16 @@
 [paths]
 # Define some useful paths that get referenced later
 # This whole section is optional
-source = /star/u/campbell/thesisAnalysis
-scratch = /gpfs/mnt/gpfs01/star/scratch/campbell
-output = ${scratch}/200GeV
+source = /star/u/lisa/thesisAnalysis
+scratch = /gpfs/mnt/gpfs01/star/scratch/lisa
+output = ${scratch}/193GeV
 
 [job_attributes]
 datasetSplitting = fileBased
 simulateSubmission = false
 fileListSyntax = xrootd
-minFilesPerProcess = 168
-maxFilesPerProcess = 170
+minFilesPerProcess = 20
+maxFilesPerProcess = 22
 
 [package]
 package_name = femtoPackage
@@ -27,7 +27,8 @@ list =
 
 [input]
 files = 
-    ${paths:source}/hbt/AuAupions.list, all, f
+    ${paths:source}/hbt/UUpions.list, all, f
+    # ${paths:source}/hbt/AuAupions.list, all, f
 commands =
     # cp foo bar;
     # root -b macro.C('inputFile.root', 'outputFile.root');

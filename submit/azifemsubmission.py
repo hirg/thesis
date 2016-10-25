@@ -7,8 +7,8 @@ do_submit = True
 file_list = '$FILELIST'
 config_file = 'hbt/femto.config'
 macro = 'hbt/AziFemAnalysis.C'
-# species = 'UU'
-species = 'AuAu'
+species = 'UU'
+# species = 'AuAu'
 submission_params_file = 'submit/azifemSubmit.params'
 n_events = 999999
 
