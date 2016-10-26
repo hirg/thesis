@@ -17,7 +17,7 @@ Int_t runDay(Int_t runId);
 void computeResolution(	const TString inFile = "testPion.list", 
 						const char* outFile = "testOut.root", 
                         const string configFile = "QA/computeResolution.config",
-                        Int_t nEvents = 999
+                        Int_t nEvents = 999999
                         )
 {
 	//------------------- Load Shared Libraries ------------------//
@@ -49,7 +49,9 @@ void computeResolution(	const TString inFile = "testPion.list",
 	TBranch* eventBranch = 0;
 
     TChain* chain = new TChain("PionDst","PionDst");
-    fillChain(chain,inFile.Data(),1000);
+    cout << "Added ";
+    cout << fillChain(chain,inFile.Data(),1000);
+    cout << " files to chain." << endl;
 	chain->SetBranchAddress("Event",&event); 
 
 	//------------------- Create Histrograms, etc. ------------------//
@@ -63,7 +65,9 @@ void computeResolution(	const TString inFile = "testPion.list",
 	TProfile2D* subResSquaredRefmultInclusiveZdcCut = new TProfile2D("subResSquaredRefmultInclusiveZdcCut","subResSquaredRefmultInclusiveZdcCut",5,-0.5,4.5,2,-0.5,1.5);
 	TProfile2D* subResSquaredq2InclusiveZdcCut = new TProfile2D("subResSquaredq2InclusiveZdcCut","subResSquaredq2InclusiveZdcCut",5,-0.5,4.5,2,-0.5,1.5);
 
-    TProfile* avgRefmultVsRunnumber = new TProfile("avgRefmultVsRunnumber", "avgRefmultVsRunnumber",
+    TProfile* avgRefmultVsRunnumber = new TProfile("avgRefmultVsRunnumber",
+         "avgRefmultVsRunnumber", config.getI("nRunIds"), 0, config.getI("nRunIds"));
+    TH1I* nEventsPerRunnumber = new TH1I("nEventsPerRunnumber", "nEventsPerRunnumber", 
                 config.getI("nRunIds"), 0, config.getI("nRunIds"));
 	TH1F* refmultDist = new TH1F("refmultDist","Refmult Distribution",1000,-0.5,999.5);
     TH1F* q2Dist = new TH1F("q2Dist","q2 Distribution",1000,0,5);
@@ -120,7 +124,12 @@ void computeResolution(	const TString inFile = "testPion.list",
 	for (Long64_t i=0; i < nEvents; i++)
     {
         // event->Clear();
-        chain->GetEntry(i);
+        Int_t makeReturn = chain->GetEntry(i);
+		if (!makeReturn)
+        {
+			cout << "Out of events!" << endl;
+			break;
+		}
 
 
         zdcE = event->GetZDCe();
@@ -193,6 +202,7 @@ void computeResolution(	const TString inFile = "testPion.list",
         if( (refmult >= refmultcut) && (tofmult >= tofmultcut))
         {
             avgRefmultVsRunnumber->Fill(runMap[runId], refmult);
+            nEventsPerRunnumber->Fill(runMap[runId]);
 
 
         }
