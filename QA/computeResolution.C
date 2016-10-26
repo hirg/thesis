@@ -64,7 +64,7 @@ void computeResolution(	const TString inFile = "testPion.list",
 	TProfile2D* subResSquaredq2InclusiveZdcCut = new TProfile2D("subResSquaredq2InclusiveZdcCut","subResSquaredq2InclusiveZdcCut",5,-0.5,4.5,2,-0.5,1.5);
 
     TProfile* avgRefmultVsRunnumber = new TProfile("avgRefmultVsRunnumber", "avgRefmultVsRunnumber",
-                config.getI("runIds"), 0, config.getI("nRunIds"));
+                config.getI("nRunIds"), 0, config.getI("nRunIds"));
 	TH1F* refmultDist = new TH1F("refmultDist","Refmult Distribution",1000,-0.5,999.5);
     TH1F* q2Dist = new TH1F("q2Dist","q2 Distribution",1000,0,5);
     TH1F* refmultDeltaPsiDist = new TH1F("refmultDeltaPsiDist","#Delta #Psi_{2} Distribution - refmult",200,-1*pi,pi);
