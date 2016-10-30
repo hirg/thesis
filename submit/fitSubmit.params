@@ -1,0 +1,32 @@
+[paths]
+# Define some useful paths that get referenced later
+# This whole section is optional
+source = /star/u/campbell/thesisAnalysis
+scratch = /gpfs/mnt/gpfs01/star/scratch/campbell
+output = ${scratch}/fit
+
+[job_attributes]
+simulateSubmission = false
+fileListSyntax = xrootd
+
+[package]
+package_name = fitPackage
+files =
+   ${paths:source}/fit;
+
+[output]
+# Must write $JOBID with two dollar signs, the first one escapes the second
+stderr_path = ${paths:output}/logs/$$JOBID.err
+list =
+    *.log, ${paths:output}/logs/;
+    *.root, ${paths:output}/output/
+
+[input]
+files =
+commands =
+    echo Hello World
+
+[generator]
+location = ${paths:output}/schedulerFiles
+report_location = ${paths:output}/schedulerFiles
+
