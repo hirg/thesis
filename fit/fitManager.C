@@ -15,15 +15,15 @@ void fitManager(
     const Int_t q2MultBin = 0,          // q2MultBin
     const Int_t phiBin = 0,             // phiBin
     const Int_t ktBin = 4,              // 4 = Integrated kT
-    const Double_t fitRange = 0.149,    // Do the fit from -fitRange to +fitRange
-    const Double_t projRange = 0.03,    // Project from -projRange to +projRange
-    const Double_t initNorm = 0.16,   // Initial Values for the fit
-    const Double_t initLambda = 0.45, 
+    const Double_t fitRange = 0.099,    // Do the fit from -fitRange to +fitRange
+    const Double_t projRange = 0.01,    // Project from -projRange to +projRange
+    const Double_t initNorm = 0.137,   // Initial Values for the fit
+    const Double_t initLambda = 0.38, 
     const Double_t initRo = 27, 
     const Double_t initRs = 22, 
     const Double_t initRl = 32, 
     const Double_t initRos = 0, 
-    const Double_t initRol = 0, 
+    const Double_t initRol = 1, 
     const Double_t initRsl = 0 
     )
 {
@@ -32,7 +32,9 @@ void fitManager(
     TH3D* den;
     TH3D* coul;
     TH3D* fitNum;
-    TGraph* contour = 0;
+    TGraph* contour[28] = {0};
+    TGraph* dist[8] = {0};
+    TGraph* newDist[8] = {0};
 
     readData(num,den,coul,inputfile.Data(),pm,ktBin,phiBin);
     coul->Divide(den);
@@ -44,7 +46,7 @@ void fitManager(
 
     //Do the fit
     TStopwatch* fitTimer = new TStopwatch();
-    fit(num, den, coul, nFitPars, fitRange, minuit, initNorm, initLambda, initRo, initRs, initRl, initRos, initRol, initRsl, &contour);
+    fit(num, den, coul, nFitPars, fitRange, minuit, initNorm, initLambda, initRo, initRs, initRl, initRos, initRol, initRsl, contour, dist, newDist);
     cout << "\nFit took " << fitTimer->RealTime() << " seconds to finish.\n\n";
 
     for (Int_t i = 0; i <= 7; ++i) { minuit->GetParameter(i, fitPars[i], fitParErrors[i]); }
@@ -62,15 +64,17 @@ void fitManager(
     fitDirectory->cd();
     doProjections(num, fitNum, den, projectedCF, projectedFitCF, fitPars[0], projRange);
     minuit->Write("Minuit", 2);
+    for (Int_t i = 0; i <= 27; i++)
+    {
+        if(contour[i]) { contour[i]->Write(contour[i]->GetName(), 2); }
+        if(dist[i]) { dist[i]->Write(dist[i]->GetName(), 2); }
+        if(newDist[i]) { newDist[i]->Write(newDist[i]->GetName(), 2); }
+    }
 
     // Save fit parameters to TGraphs
     Int_t phiLabels[8] = {0,22,45,67,90,112,135,157};
     gDirectory->cd("..");
     writeTGraphs(minuit, phiBin, phiLabels[phiBin]);
-    cout << contour << endl;
-    TCanvas* test = new TCanvas();
-    contour->Draw();
-    test->Print("test.pdf");
 
     outFile->Close();
     delete minuit;
@@ -98,6 +102,7 @@ void readData(TH3D* &num, TH3D* &den, TH3D* &coul, const TString inFile, const I
 //    Int_t phiLabels[4] = {0,45,90,135};
     Float_t ktLabels[4] = {0.22,0.33,0.42,0.52};
     TString histNames[6] = { "NumPiPlus" , "DenPiPlus" , "CoulPiPlus" , "NumPiMinus" , "DenPiMinus" , "CoulPiMinus" };
+    // TString histNames[6] = { "NumPiPlus" , "DenPiPlus" , "CoulPiPlus_chargeRadius9" , "NumPiMinus" , "DenPiMinus" , "CoulPiMinus_chargeRadius9" };
 
 
     for(Int_t i = 0; i <= 5; i++)
@@ -205,6 +210,12 @@ void doProjections(TH3D* num, TH3D* fitNum, TH3D* den, TH1D** projCF, TH1D** pro
         projFitCF[i]->SetLineWidth(2);
         projFitCF[i]->SetMaximum(1.4);
         projFitCF[i]->SetMinimum(0.9);
+
+        Int_t nBins  = projFitCF[i]->GetNbinsX();
+        for (Int_t j = 0; j <= (nBins-1); j++)
+        {
+            projFitCF[i]->SetBinError(j,0);
+        }
 
         //Write the histograms
         projCF[i]->Write(projCF[i]->GetName(), 2);

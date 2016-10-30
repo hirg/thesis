@@ -306,6 +306,7 @@ void AziFemAnalysis(const TString fileList = "hbt/AuAupions.list",
 				qOslRPCF[i]->Numerator3D(k,j)->Write();
 				qOslRPCF[i]->Denominator3D(k,j)->Write();
 				qOslRPCF[i]->CoulHisto3D(k,j)->Write();
+				qOslRPCF[i]->QinvHisto3D(k,j)->Write();
             } // End loop over phi bins
         } // End loop over kt bins
     }

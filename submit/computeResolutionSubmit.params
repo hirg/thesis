@@ -1,0 +1,37 @@
+[paths]
+# Define some useful paths that get referenced later
+# This whole section is optional
+source = /star/u/campbell/thesisAnalysis
+scratch = /gpfs/mnt/gpfs01/star/scratch/campbell
+output = ${scratch}/QA
+
+[job_attributes]
+datasetSplitting = fileBased
+simulateSubmission = false
+fileListSyntax = xrootd
+minFilesPerProcess = 16
+maxFilesPerProcess = 20
+
+[package]
+package_name = QAPackage
+files =
+   ${paths:source}/QA;
+   ${paths:source}/.sl64_gcc482
+
+[output]
+# Must write $JOBID with two dollar signs, the first one escapes the second
+stderr_path = ${paths:output}/logs/$$JOBID.err
+list =
+    *.log, ${paths:output}/logs/;
+    *.root, ${paths:output}/output/
+
+[input]
+files = 
+    ${paths:source}/hbt/AuAupions.list, all, f
+commands =
+    root -b QA/computeResolution.C\(\"$$FILELIST\",\"AuAuQA_$${JOBID}.root\"\) >& AuAuQA_$${JOBID}.log;
+
+[generator]
+location = ${paths:output}/schedulerFiles
+report_location = ${paths:output}/schedulerFiles
+

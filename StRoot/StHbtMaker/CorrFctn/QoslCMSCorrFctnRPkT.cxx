@@ -55,6 +55,13 @@ QoslCMSCorrFctnRPkT::QoslCMSCorrFctnRPkT(char* title, const int& nbinso, const f
       //mQinvHisto[i][j] = new StHbt3DHisto(TitQinv,TitQinv,nbinso,QoLo,QoHi,nbinss,QsLo,QsHi,nbinsl,QlLo,QlHi);
 
       // set up ave qInv
+      TString TitQinv = "Qinv";
+      TitQinv += title;
+      TitQinv += TitAngle.Data();
+      TitQinv += TitKt.Data();
+ 	   	mQinvHisto[i][j] = new StHbt3DHisto(TitQinv.Data(),TitQinv.Data(),nbinso,QoLo,QoHi,nbinss,QsLo,QsHi,nbinsl,QlLo,QlHi);
+
+      // set up ave qInv
       TString TitCoul = "Coul";
       TitCoul += title;
       TitCoul += TitAngle.Data();
@@ -76,17 +83,18 @@ QoslCMSCorrFctnRPkT::~QoslCMSCorrFctnRPkT(){
     delete mNumerator[i][j];
     delete mDenominator[i][j];
     delete mCoulHisto[i][j];
+    delete mQinvHisto[i][j];
    }
   }
 }
 //_________________________
 void QoslCMSCorrFctnRPkT::Finish(){
   // here is where we should normalize, fit, etc...
-//  for(int i=0; i<nRPbins; i++) {
-//   for(int j=0; j<nKtBins; j++) {
-//    mQinvHisto[i][j]->Divide(mDenominator[i][j]);
-//   }
-//  }
+ for(int i=0; i<nRPbins; i++) {
+  for(int j=0; j<nKtBins; j++) {
+   mQinvHisto[i][j]->Divide(mDenominator[i][j]);
+  }
+ }
 
 }
 
@@ -128,7 +136,7 @@ void QoslCMSCorrFctnRPkT::AddMixedPair(const StHbtPair* pair){
   ktBin = GetKtBin(pair);
   if(ktBin<0) return;
 
-  //double Qinv = fabs(pair->qInv());   
+  double Qinv = fabs(pair->qInv());   
 
   double weight = 1.0;
   if (mCorrection) weight = mCorrection->CoulombCorrect(pair);
@@ -143,6 +151,8 @@ void QoslCMSCorrFctnRPkT::AddMixedPair(const StHbtPair* pair){
   mDenominator[rpBin][4]->Fill(Qo,Qs,Ql);
   mCoulHisto[rpBin][ktBin]->Fill(Qo,Qs,Ql,weight);
   mCoulHisto[rpBin][4]->Fill(Qo,Qs,Ql,weight);
+  mQinvHisto[rpBin][ktBin]->Fill(Qo,Qs,Ql,Qinv);
+  mQinvHisto[rpBin][4]->Fill(Qo,Qs,Ql,Qinv);
 
 }
 //____________________________
