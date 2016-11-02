@@ -13,14 +13,14 @@ submission_params_file = 'submit/fitSubmit.params'
 n_events = 999999
 plus_or_minus = 0
 
-n_zdcBins = 1
-n_q2OrMultBins = 1
-n_q2MultBins = 1
-n_phiBins = 1
-# n_zdcBins = 2
-# n_q2OrMultBins = 2
-# n_q2MultBins = 5
-# n_phiBins = 8
+# n_zdcBins = 1
+# n_q2OrMultBins = 1
+# n_q2MultBins = 1
+# n_phiBins = 1
+n_zdcBins = 2
+n_q2OrMultBins = 2
+n_q2MultBins = 5
+n_phiBins = 8
 
 fit_options = {'in_file': 'defaultIn.root',
                'out_file': 'defaultOut.root',

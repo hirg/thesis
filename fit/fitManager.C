@@ -33,8 +33,8 @@ void fitManager(
     TH3D* coul;
     TH3D* fitNum;
     TGraph* contour[28] = {0};
-    TGraph* dist[8] = {0};
-    TGraph* newDist[8] = {0};
+    TGraph* dist[28] = {0};
+    TGraph* newDist[28] = {0};
 
     readData(num,den,coul,inputfile.Data(),pm,ktBin,phiBin);
     coul->Divide(den);
@@ -46,10 +46,12 @@ void fitManager(
 
     //Do the fit
     TStopwatch* fitTimer = new TStopwatch();
-    fit(num, den, coul, nFitPars, fitRange, minuit, initNorm, initLambda, initRo, initRs, initRl, initRos, initRol, initRsl, contour, dist, newDist);
+    fit(num, den, coul, nFitPars, fitRange, minuit, initNorm, initLambda,
+        initRo, initRs, initRl, initRos, initRol, initRsl, contour, dist, newDist);
     cout << "\nFit took " << fitTimer->RealTime() << " seconds to finish.\n\n";
 
-    for (Int_t i = 0; i <= 7; ++i) { minuit->GetParameter(i, fitPars[i], fitParErrors[i]); }
+    for (Int_t i = 0; i <= 7; ++i)
+    { minuit->GetParameter(i, fitPars[i], fitParErrors[i]); }
 
     //Project histograms
     fitNum = histCopy(den, "Theoretical Numerator");
@@ -68,7 +70,6 @@ void fitManager(
     {
         if(contour[i]) { contour[i]->Write(contour[i]->GetName(), 2); }
         if(dist[i]) { dist[i]->Write(dist[i]->GetName(), 2); }
-        if(newDist[i]) { newDist[i]->Write(newDist[i]->GetName(), 2); }
     }
 
     // Save fit parameters to TGraphs

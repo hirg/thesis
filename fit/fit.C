@@ -99,15 +99,12 @@ void fit(
     for (Int_t i = 0; i <= 7; ++i) {
         // Only make the dist if we actually tried to fit the value
         if(initRange[i]) {
-            for (Int_t i = 0; i <= 7; ++i) { tmFit->GetParameter(i, tempPars[i], tempParErrors[i]); }
+            for (Int_t j = 0; j <= 7; ++j)
+            { tmFit->GetParameter(j, tempPars[j], tempParErrors[j]); }
             dist[i] = scanDistribution(tempPars, scanFraction, i);
             TString title = TString::Format("%s_Dist", parNames[i].Data());
             dist[i]->SetNameTitle(title.Data(), title.Data());
 
-            for (Int_t i = 0; i <= 7; ++i) { tmFit->GetParameter(i, tempPars[i], tempParErrors[i]); }
-            newDist[i] = scanNewDistribution(tempPars, scanFraction, i);
-            TString newTitle = TString::Format("%s_DistNew", parNames[i].Data());
-            newDist[i]->SetNameTitle(newTitle.Data(), newTitle.Data());
         }
     }
 }
