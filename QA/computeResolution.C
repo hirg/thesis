@@ -1,3 +1,4 @@
+#include "../src/azifemNamespace_core.cxx"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -17,6 +18,7 @@ Int_t runDay(Int_t runId);
 void computeResolution(	const TString inFile = "testPion.list", 
 						const char* outFile = "testOut.root", 
                         const string configFile = "QA/computeResolution.config",
+                        const Bool_t uuNotAuAu = kFALSE,
                         Int_t nEvents = 999999
                         )
 {
@@ -32,7 +34,9 @@ void computeResolution(	const TString inFile = "testPion.list",
     ConfigReader config(configFile);
     const Int_t tofmultcut = config.getI("tofmultcut");
     const Int_t refmultcut = config.getI("refmultcut");
-    const map<Int_t, Int_t> runMap = makeAuAuRunMap();
+    const map<Int_t, Int_t> runMap = azifem::makeRunMap(uuNotAuAu);
+    const Int_t nRuns = runMap.size();
+    cout << runMap.size() << endl;
 
 	//------------------- Set some variables ------------------//
 
@@ -75,13 +79,13 @@ void computeResolution(	const TString inFile = "testPion.list",
 
     TProfile* avgSubresVsRunnumber = new TProfile(
         "avgSubresVsRunnumber", "avgSubresVsRunnumber", 
-        config.getI("nRunIds"), 0, config.getI("nRunIds"));
+        nRuns, 0, nRuns);
     TProfile* avgRefmultVsRunnumber = new TProfile(
         "avgRefmultVsRunnumber", "avgRefmultVsRunnumber", 
-        config.getI("nRunIds"), 0, config.getI("nRunIds"));
+        nRuns, 0, nRuns);
     TH1I* nEventsPerRunnumber = new TH1I(
         "nEventsPerRunnumber", "nEventsPerRunnumber", 
-        config.getI("nRunIds"), 0, config.getI("nRunIds"));
+        nRuns, 0, nRuns);
 	TH1F* refmultDist = new TH1F("refmultDist","Refmult Distribution",1000,-0.5,999.5);
     TH1F* q2Dist = new TH1F("q2Dist","q2 Distribution",1000,0,5);
     TH1F* refmultDeltaPsiDist = new TH1F(
