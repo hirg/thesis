@@ -1,5 +1,6 @@
 #ifndef AZIFEMNAMESPACE_RUNID_CXX
 #define AZIFEMNAMESPACE_RUNID_CXX
+#include <map>
 
 namespace azifem {
 
@@ -31,6 +32,35 @@ namespace azifem {
     const Int_t nAuAuRuns = 1013;
     const Int_t nUURuns = 722;
 
+    map<Int_t, Int_t> makeRunMap(Bool_t uuNotAuAu = kTRUE);
+}
+
+/*
+This function returns a map that can be used to index the run numbers. For
+instance, if 12127003 is the 7th run number for the Au+Au dataset then:
+     map<Int_t, Int_t AuAuMap = azifem::makeRunMap(kFALSE);
+     cout << AuAuMap[12127003] << endl;
+will print "7" to the console.
+
+The boolean "uuNotAuAu" is used to determine wheter a map for the U+U or 
+Au+Au dataset is returned. uuNotAuAU=kTRUE will designate the U+U data set
+*/
+map<Int_t, Int_t> azifem::makeRunMap(Bool_t uuNotAuAu)
+{
+
+    // Int_t* runs;
+    Int_t nRuns = uuNotAuAu ? (azifem::nUURuns) : (azifem::nAuAuRuns);
+    map<Int_t, Int_t> runMap;
+
+    for(Int_t i = 0; i <= (nRuns-1); i++) {
+        if(uuNotAuAu) {
+            runMap[azifem::UURunIds[i]] = i;
+        } else {
+            runMap[azifem::AuAuRunIds[i]] = i;
+        }
+    }
+
+    return runMap;
 }
 
 const Int_t azifem::AuAuRunIds[] = {
