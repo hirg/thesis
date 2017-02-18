@@ -34,7 +34,7 @@ void computeResolution(	const TString inFile = "testPion.list",
     const Int_t refmultcut = config.getI("refmultcut");
     const map<Int_t, Int_t> runMap = makeAuAuRunMap();
 
-	//------------------- Set some variable ------------------//
+	//------------------- Set some variables ------------------//
 
 	Float_t psiAMult = 0, psiBMult = 0, psiFullMult = 0;
 	Float_t zdcE = 0, zdcW = 0, zdcHigher = 0;
@@ -60,19 +60,36 @@ void computeResolution(	const TString inFile = "testPion.list",
     Double_t pi = TMath::Pi();
 
     // Resolution TProfile's
-	TProfile2D* subResSquaredRefmultExclusiveZdcCut = new TProfile2D("subResSquaredRefmultExclusiveZdcCut","subResSquaredRefmultExclusiveZdcCut",5,-0.5,4.5,2,-0.5,1.5);
-	TProfile2D* subResSquaredq2ExclusiveZdcCut = new TProfile2D("subResSquaredq2ExclusiveZdcCut","subResSquaredq2ExclusiveZdcCut",5,-0.5,4.5,2,-0.5,1.5);
-	TProfile2D* subResSquaredRefmultInclusiveZdcCut = new TProfile2D("subResSquaredRefmultInclusiveZdcCut","subResSquaredRefmultInclusiveZdcCut",5,-0.5,4.5,2,-0.5,1.5);
-	TProfile2D* subResSquaredq2InclusiveZdcCut = new TProfile2D("subResSquaredq2InclusiveZdcCut","subResSquaredq2InclusiveZdcCut",5,-0.5,4.5,2,-0.5,1.5);
+	TProfile2D* subResSquaredRefmultExclusiveZdcCut = new TProfile2D(
+        "subResSquaredRefmultExclusiveZdcCut","subResSquaredRefmultExclusiveZdcCut",
+        5, -0.5, 4.5, 2, -0.5, 1.5);
+	TProfile2D* subResSquaredq2ExclusiveZdcCut = new TProfile2D(
+        "subResSquaredq2ExclusiveZdcCut","subResSquaredq2ExclusiveZdcCut",
+        5, -0.5, 4.5, 2, -0.5, 1.5);
+	TProfile2D* subResSquaredRefmultInclusiveZdcCut = new TProfile2D(
+        "subResSquaredRefmultInclusiveZdcCut","subResSquaredRefmultInclusiveZdcCut",
+        5, -0.5, 4.5, 2, -0.5, 1.5);
+	TProfile2D* subResSquaredq2InclusiveZdcCut = new TProfile2D(
+        "subResSquaredq2InclusiveZdcCut","subResSquaredq2InclusiveZdcCut",
+        5, -0.5, 4.5, 2, -0.5, 1.5);
 
-    TProfile* avgRefmultVsRunnumber = new TProfile("avgRefmultVsRunnumber",
-         "avgRefmultVsRunnumber", config.getI("nRunIds"), 0, config.getI("nRunIds"));
-    TH1I* nEventsPerRunnumber = new TH1I("nEventsPerRunnumber", "nEventsPerRunnumber", 
-                config.getI("nRunIds"), 0, config.getI("nRunIds"));
+    TProfile* avgSubresVsRunnumber = new TProfile(
+        "avgSubresVsRunnumber", "avgSubresVsRunnumber", 
+        config.getI("nRunIds"), 0, config.getI("nRunIds"));
+    TProfile* avgRefmultVsRunnumber = new TProfile(
+        "avgRefmultVsRunnumber", "avgRefmultVsRunnumber", 
+        config.getI("nRunIds"), 0, config.getI("nRunIds"));
+    TH1I* nEventsPerRunnumber = new TH1I(
+        "nEventsPerRunnumber", "nEventsPerRunnumber", 
+        config.getI("nRunIds"), 0, config.getI("nRunIds"));
 	TH1F* refmultDist = new TH1F("refmultDist","Refmult Distribution",1000,-0.5,999.5);
     TH1F* q2Dist = new TH1F("q2Dist","q2 Distribution",1000,0,5);
-    TH1F* refmultDeltaPsiDist = new TH1F("refmultDeltaPsiDist","#Delta #Psi_{2} Distribution - refmult",200,-1*pi,pi);
-    TH1F* q2DeltaPsiDist = new TH1F("q2DeltaPsiDist","#Delta #Psi_{2} Distribution - q2",200,-1*pi,pi);
+    TH1F* refmultDeltaPsiDist = new TH1F(
+        "refmultDeltaPsiDist","#Delta #Psi_{2} Distribution - refmult",
+        200, -1*pi, pi);
+    TH1F* q2DeltaPsiDist = new TH1F(
+        "q2DeltaPsiDist","#Delta #Psi_{2} Distribution - q2",
+        200, -1*pi, pi);
 	TH1F* refmultDistExclusiveZdcCut[2];
     TH1F* q2DistExclusiveZdcCut[2];
 	TH1F* refmultDistInclusiveZdcCut[2];
@@ -198,14 +215,9 @@ void computeResolution(	const TString inFile = "testPion.list",
         zdcEvsZdcW->Fill(zdcW,zdcE);
 
 
-        // Investigate tof lobe
-        if( (refmult >= refmultcut) && (tofmult >= tofmultcut))
-        {
-            avgRefmultVsRunnumber->Fill(runMap[runId], refmult);
-            nEventsPerRunnumber->Fill(runMap[runId]);
-
-
-        }
+        avgRefmultVsRunnumber->Fill(runMap[runId], refmult);
+        avgSubresVsRunnumber->Fill(runMap[runId], resMult);
+        nEventsPerRunnumber->Fill(runMap[runId]);
 
 	} // loop over events
 
