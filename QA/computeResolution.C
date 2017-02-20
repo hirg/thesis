@@ -18,7 +18,7 @@ Int_t runDay(Int_t runId);
 void computeResolution(	const TString inFile = "testPion.list", 
 						const char* outFile = "testOut.root", 
                         const string configFile = "QA/computeResolution.config",
-                        const Bool_t uuNotAuAu = kFALSE,
+                        const Bool_t uuNotAuAu = kTRUE,
                         Int_t nEvents = 999999
                         )
 {
