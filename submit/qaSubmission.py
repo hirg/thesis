@@ -17,5 +17,5 @@ if __name__ == '__main__':
     sub = Submission(args.paramater_file)
     sub.make_xml()
     sub.write_xml(args.xml_file)
-    if args.submit:
-        call(['star-submit', xml_file])
+    if args.s:
+        call(['star-submit', args.xml_file])
