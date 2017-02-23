@@ -10,7 +10,7 @@ Int_t azifem::getZdcBin(const Float_t zdc, const Bool_t uuNotAuAu)
     Float_t zdcLow = 999999;
     Float_t zdcHigh = -1;
 
-    for(Int_t i = 0; i <= 5; i++)
+    for(Int_t i = 0; i <= 4; i++)
     {
         if(uuNotAuAu) {
             zdcLow = UUzdcBinEdges[i];
