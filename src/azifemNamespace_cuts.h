@@ -12,6 +12,7 @@ namespace azifem {
     const Float_t AuAumult[6] = {200, 501, 522, 538, 556, 10000}; // AuAu 200
 
     Int_t getZdcBin(const Float_t zdc, const Bool_t uuNotAuAu);
+    Int_t getRefmultBin(const Float_t rm, const Bool_t uuNotAuAu);
     Int_t getq2Bin(const Double_t q2);
 }
 

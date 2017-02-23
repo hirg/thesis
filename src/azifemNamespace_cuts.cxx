@@ -27,6 +27,30 @@ Int_t azifem::getZdcBin(const Float_t zdc, const Bool_t uuNotAuAu)
     return zdcBin;
 }
 
+Int_t azifem::getRefmultBin(const Float_t rm, const Bool_t uuNotAuAu)
+{
+
+    Int_t rmBin = -1;
+    Float_t rmLow = 999999;
+    Float_t rmHigh = -1;
+
+    for(Int_t i = 0; i <= 5; i++)
+    {
+        if(uuNotAuAu) {
+            rmLow = UUmult[i];
+            rmHigh = UUmult[i+1];
+        } else {
+            rmLow = AuAumult[i];
+            rmHigh = AuAumult[i+1];
+        }
+
+        if( (rm > rmLow) && (rm <= rmHigh) ) { rmBin = i; }
+
+    }
+
+    return rmBin;
+}
+
 Int_t azifem::getq2Bin(const Double_t q2)
 {
 
