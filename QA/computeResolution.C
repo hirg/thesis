@@ -1,4 +1,4 @@
-#include "../src/azifemNamespace_core.cxx"
+#include "src/azifemNamespace.cxx"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -7,9 +7,6 @@
 #include "TTree.h"
 #include "TBranch.h"
 
-Int_t getCentBin(const Int_t rm);
-Int_t getRefmultBin(const Double_t rm);
-Int_t getq2Bin(const Double_t q2);
 Int_t getZdcBinLog(const Double_t zdc);
 map<Int_t, Int_t> makeAuAuRunMap();
 Int_t runYear(Int_t runId);
@@ -18,7 +15,7 @@ Int_t runDay(Int_t runId);
 void computeResolution(	const TString inFile = "testPion.list", 
 						const char* outFile = "testOut.root", 
                         const string configFile = "QA/computeResolution.config",
-                        const Bool_t uuNotAuAu = kTRUE,
+                        const Bool_t uuNotAuAu = kFALSE,
                         Int_t nEvents = 999999
                         )
 {
@@ -94,22 +91,23 @@ void computeResolution(	const TString inFile = "testPion.list",
     TH1F* q2DeltaPsiDist = new TH1F(
         "q2DeltaPsiDist","#Delta #Psi_{2} Distribution - q2",
         200, -1*pi, pi);
-	TH1F* refmultDistExclusiveZdcCut[2];
-    TH1F* q2DistExclusiveZdcCut[2];
-	TH1F* refmultDistInclusiveZdcCut[2];
-    TH1F* q2DistInclusiveZdcCut[2];
+	TH1F* refmultDistExclusiveZdcCut[4];
+    TH1F* q2DistExclusiveZdcCut[4];
+	TH1F* refmultDistInclusiveZdcCut[4];
+    TH1F* q2DistInclusiveZdcCut[4];
 
 	TH2F* rVertex = new TH2F("rVertex","V_{y} vs. V_{x}",200,-2,2,200,-2,2);
     TH1F* zVertex = new TH1F("zVertex","V_{z}",500,-60,60);
 	TH2F* refmultq2 = new TH2F("refmultq2","Refmult vs. q2",1000,0,5,1000,-0.5,999.5);
 	TH2F* zdcEvsZdcW = new TH2F("zdcEvsZdcW","East ZDC vs. West ZDC",700,0,2100,700,0,2100);
+    TH2F* zdcBinVsVz = new TH2F("zdcBinVsVz", "Zdc Bin vs. V_{z}", 60, -30, 30, 4, -0.5, 3.5);
 
     TH1F* q2ByZdcLog[6];
     TH1F* refmultByZdcLog[6];
 
     TH2F* tofmultVsRefmult = new TH2F("tofmultVsRefmult", "ToF multiplicity vs. refmult",1000,-0.5,999.5,1000,-0.5,3999.5 );
 
-    for(Int_t j = 0; j <= 2; j++)
+    for(Int_t j = 0; j <= 3; j++)
     {
 
         TString histName = TString::Format("refmultDistExclusiveZdcCut_%d", j);
@@ -156,7 +154,7 @@ void computeResolution(	const TString inFile = "testPion.list",
         zdcE = event->GetZDCe();
         zdcW = event->GetZDCw();
         zdcHigher = (zdcE > zdcW) ? zdcE : zdcW;
-        Int_t zdcBinLinear = getZdcBin(zdcHigher);
+        Int_t zdcBinLinear = azifem::getZdcBin(zdcHigher, uuNotAuAu);
         Int_t zdcBinLog = getZdcBinLog(zdcHigher);
 
         Vx = event->GetVertexPos().x();
@@ -195,18 +193,18 @@ void computeResolution(	const TString inFile = "testPion.list",
                 refmultDistExclusiveZdcCut[zdcBinLinear]->Fill(refmult);
                 q2DistExclusiveZdcCut[zdcBinLinear]->Fill(q2);
 
-                subResSquaredRefmultInclusiveZdcCut->Fill(getRefmultBin(refmult), zdcBinLinear, resMult);
-                subResSquaredq2InclusiveZdcCut->Fill(getq2Bin(q2), zdcBinLinear, resq2);
-                subResSquaredRefmultExclusiveZdcCut->Fill(getRefmultBin(refmult), zdcBinLinear, resMult);
-                subResSquaredq2ExclusiveZdcCut->Fill(getq2Bin(q2), zdcBinLinear, resq2);
+                subResSquaredRefmultInclusiveZdcCut->Fill(azifem::getRefmultBin(refmult, uuNotAuAu), zdcBinLinear, resMult);
+                subResSquaredq2InclusiveZdcCut->Fill(azifem::getq2Bin(q2), zdcBinLinear, resq2);
+                subResSquaredRefmultExclusiveZdcCut->Fill(azifem::getRefmultBin(refmult, uuNotAuAu), zdcBinLinear, resMult);
+                subResSquaredq2ExclusiveZdcCut->Fill(azifem::getq2Bin(q2), zdcBinLinear, resq2);
             }
 
             if(zdcBinLinear == 0) {
                 refmultDistInclusiveZdcCut[1]->Fill(refmult);
                 q2DistInclusiveZdcCut[1]->Fill(q2);
 
-                subResSquaredRefmultInclusiveZdcCut->Fill(getRefmultBin(refmult), 1, resMult);
-                subResSquaredq2InclusiveZdcCut->Fill(getq2Bin(q2), 1, resq2);
+                subResSquaredRefmultInclusiveZdcCut->Fill(azifem::getRefmultBin(refmult, uuNotAuAu), 1, resMult);
+                subResSquaredq2InclusiveZdcCut->Fill(azifem::getq2Bin(q2), 1, resq2);
             }
 
 
@@ -217,6 +215,7 @@ void computeResolution(	const TString inFile = "testPion.list",
 
         refmultq2->Fill(q2,refmult);
         zdcEvsZdcW->Fill(zdcW,zdcE);
+        zdcBinVsVz->Fill(Vz, zdcBinLinear);
 
 
         avgRefmultVsRunnumber->Fill(runMap[runId], refmult);
