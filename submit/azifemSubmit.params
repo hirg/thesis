@@ -1,19 +1,19 @@
 [paths]
 # Define some useful paths that get referenced later
 # This whole section is optional
-source = /star/u/lisa/thesisAnalysis
-scratch = /gpfs/mnt/gpfs01/star/scratch/lisa
-output = ${scratch}/193GeV
+source = /star/u/campbell/thesisAnalysis
+scratch = /gpfs/mnt/gpfs01/star/scratch/campbell
+output = ${scratch}/200GeV
 
 [job_attributes]
 datasetSplitting = fileBased
 simulateSubmission = false
 fileListSyntax = xrootd
-minFilesPerProcess = 20
-maxFilesPerProcess = 22
+minFilesPerProcess = 100
+maxFilesPerProcess = 110
 
 [package]
-package_name = femtoPackage
+package_name = femtoPackage_Vz6
 files =
    ${paths:source}/hbt;
    ${paths:source}/.sl64_gcc482
@@ -27,8 +27,8 @@ list =
 
 [input]
 files = 
-    ${paths:source}/hbt/UUpions.list, all, f
-    # ${paths:source}/hbt/AuAupions.list, all, f
+    # ${paths:source}/hbt/UUpions.list, all, f
+    ${paths:source}/hbt/AuAupions.list, all, f
 commands =
     # cp foo bar;
     # root -b macro.C('inputFile.root', 'outputFile.root');

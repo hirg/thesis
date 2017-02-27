@@ -9,13 +9,14 @@ output = ${scratch}/QA
 datasetSplitting = fileBased
 simulateSubmission = false
 fileListSyntax = xrootd
-minFilesPerProcess = 16
-maxFilesPerProcess = 20
+minFilesPerProcess = 10
+maxFilesPerProcess = 15
 
 [package]
 package_name = QAPackage
 files =
    ${paths:source}/QA;
+   ${paths:source}/src;
    ${paths:source}/.sl64_gcc482
 
 [output]
@@ -27,8 +28,10 @@ list =
 
 [input]
 files = 
+    # ${paths:source}/hbt/UUpions.list, all, f
     ${paths:source}/hbt/AuAupions.list, all, f
 commands =
+    # root -b QA/computeResolution.C\(\"$$FILELIST\",\"UUQA_$${JOBID}.root\"\) >& AuAuQA_$${JOBID}.log;
     root -b QA/computeResolution.C\(\"$$FILELIST\",\"AuAuQA_$${JOBID}.root\"\) >& AuAuQA_$${JOBID}.log;
 
 [generator]

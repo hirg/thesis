@@ -7,17 +7,17 @@ do_submit = True
 file_list = '$FILELIST'
 config_file = 'hbt/femto.config'
 macro = 'hbt/AziFemAnalysis.C'
-species = 'UU'
-# species = 'AuAu'
+# species = 'UU'
+species = 'AuAu'
 submission_params_file = 'submit/azifemSubmit.params'
-n_events = 999999
+n_events = 99999999
 
-n_zdcBins = 2
+n_zdcBins = 1
 n_q2OrMultBins = 2
 n_q2MultBins = 5
 
 for i_zdc in range(0, n_zdcBins):
-    for q2OrMult in range(0,n_q2OrMultBins):
+    for q2OrMult in range(1,n_q2OrMultBins):
         for i_q2MultBins in range(0,n_q2MultBins):
             if( q2OrMult == 0 ):
                 q2_bin = i_q2MultBins
@@ -29,7 +29,7 @@ for i_zdc in range(0, n_zdcBins):
                 bin_label = 'mult_' + str(i_q2MultBins)
 
             # Set up the command
-            job_label = '%sFemto_zdc_%d_%s' % (species, i_zdc, bin_label)
+            job_label = '%sFemto_zdc_%d_%s_Vz_7' % (species, i_zdc, bin_label)
             out_file = job_label + '_${JOBID}.root'
             log_file = job_label + '_${JOBID}.log'
             xml_file = job_label + '.xml'
