@@ -7,12 +7,14 @@
 
 void AziFemAnalysis(const TString fileList = "hbt/AuAupions.list",
 					   const TString outFile = "aziFemTestOut.root",
+                       const Float_t vzLow = 999,
+                       const Float_t vzHigh = -999,
 					   const Int_t q2Bin = -1,
 					   const Int_t multBin = 0,
 					   const Int_t zdcBin = 0,
                        const string configFile = "hbt/femto.config",
                        const string speciesString = "AuAu",
-					   const Int_t nEvents = 9999
+					   const Int_t nEvents = 999
                        )
 {
 	TStopwatch* timer = new TStopwatch();
@@ -61,7 +63,10 @@ void AziFemAnalysis(const TString fileList = "hbt/AuAupions.list",
     const Int_t nMultBins = config.getI("nMultBins");
     const vector<Float_t> multRange = config.getVF("multRange");
     const Int_t nVzBins = config.getI("nVzBins");
-    const vector<Float_t> vzRange = config.getVF("vzRange");
+    // const vector<Float_t> vzRange = config.getVF("vzRange");
+    vector<Float_t> vzRange;
+    vzRange.push_back(vzLow);
+    vzRange.push_back(vzHigh);
 
 	//------------------- Instantiate Cut Objects ------------------//
 
@@ -159,10 +164,8 @@ void AziFemAnalysis(const TString fileList = "hbt/AuAupions.list",
 	//------------------- Instantiate Hbt Analyses and Correlation Functions ------------------//
 
     StHbtReactionPlaneAnalysis* azifemAnalysis[2];
-    // QoslCMSCorrFctnkT* qOslCFNarrow[2];
-    // QoslCMSCorrFctnkT* qOslCFWide[2];
+    QoslCMSCorrFctnkT* qOslCF[2];
 	QoslCMSCorrFctnRPkT* qOslRPCF[2];
-	QoslCMSCorrFctnRPkT* qOslRPCF_wide[2];
     for(Int_t i = 0; i <=1; i++)
     {
         azifemAnalysis[i] = new StHbtReactionPlaneAnalysis(ptSwitch,nEPBins,rpRange[0],rpRange[1],nMultBins,multRange[0],multRange[1],nVzBins,vzRange[0],vzRange[1]);
@@ -175,15 +178,10 @@ void AziFemAnalysis(const TString fileList = "hbt/AuAupions.list",
         TString title = "";
         if(i==0) {title += "PiMinus";}
         if(i==1) {title += "PiPlus";}
+        qOslCF[i] = new QoslCMSCorrFctnkT(title.Data(),nQbins,qRange[0],qRange[1],nQbins,qRange[0],qRange[1],nQbins,qRange[0],qRange[1]);
         qOslRPCF[i] = new QoslCMSCorrFctnRPkT(title.Data(),nQbins,qRange[0],qRange[1],nQbins,qRange[0],qRange[1],nQbins,qRange[0],qRange[1],nPhiBins);
-        // qOslCFNarrow[i] = new QoslCMSCorrFctnkT(title.Data(),nQbins,qRange[0],qRange[1],nQbins,qRange[0],qRange[1],nQbins,qRange[0],qRange[1]);
-        title+="_Wide";
-        // qOslCFWide[i] = new QoslCMSCorrFctnkT(title.Data(),nQbins,-2.,2,nQbins,-2.,2,nQbins,-2.,2);
-        qOslRPCF_wide[i] = new QoslCMSCorrFctnRPkT(title.Data(),nQbins,qRange[0],qRange[1],nQbins,qRange[0],qRange[1],nQbins,qRange[0],qRange[1],nPhiBins/2);
-        // azifemAnalysis[i]->AddCorrFctn(qOslCFNarrow[i]);
-        // azifemAnalysis[i]->AddCorrFctn(qOslCFWide[i]);
         azifemAnalysis[i]->AddCorrFctn(qOslRPCF[i]);
-        azifemAnalysis[i]->AddCorrFctn(qOslRPCF_wide[i]);
+        azifemAnalysis[i]->AddCorrFctn(qOslCF[i]);
     }
 
 
@@ -294,15 +292,7 @@ void AziFemAnalysis(const TString fileList = "hbt/AuAupions.list",
     for(Int_t i = 0; i <=1; i++)
     {
 
-        for(int j=3; j<=4; j++) { //bins 0,1,2,(3) are typical kt bins for this version. Bin 4 is the ktIntegrated histo.
-
-            // qOslCFNarrow[i]->Numerator3D(j)->Write();
-            // qOslCFNarrow[i]->Denominator3D(j)->Write();
-            // qOslCFNarrow[i]->CoulHisto3D(j)->Write();
-
-            // qOslCFWide[i]->Numerator3D(j)->Write();
-            // qOslCFWide[i]->Denominator3D(j)->Write();
-            // qOslCFWide[i]->CoulHisto3D(j)->Write();
+        for(int j=0; j<=4; j++) { //bins 0,1,2,(3) are typical kt bins for this version. Bin 4 is the ktIntegrated histo.
 
             for(int k=0; k<nPhiBins; k++) { 
 
@@ -310,15 +300,13 @@ void AziFemAnalysis(const TString fileList = "hbt/AuAupions.list",
 				qOslRPCF[i]->Denominator3D(k,j)->Write();
 				qOslRPCF[i]->CoulHisto3D(k,j)->Write();
 				// qOslRPCF[i]->QinvHisto3D(k,j)->Write();
-                if( k <= 3 ) {
-                    qOslRPCF_wide[i]->Numerator3D(k,j)->Write();
-                    qOslRPCF_wide[i]->Denominator3D(k,j)->Write();
-                    qOslRPCF_wide[i]->CoulHisto3D(k,j)->Write();
-                }
-				// qOslRPCF_wide[i]->QinvHisto3D(k,j)->Write();
             } // End loop over phi bins
+
+            qOslCF[i]->Numerator3D(j)->Write();
+            qOslCF[i]->Denominator3D(j)->Write();
+            qOslCF[i]->CoulHisto3D(j)->Write();
         } // End loop over kt bins
-    }
+    } // End loop over pi+ / pi-
 
     histoOutput.Close();
 
