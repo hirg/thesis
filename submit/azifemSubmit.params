@@ -12,28 +12,27 @@ fileListSyntax = xrootd
 minFilesPerProcess = 100
 maxFilesPerProcess = 110
 
-[package]
-package_name = femtoPackage_Vz6
-files =
-   ${paths:source}/hbt;
-   ${paths:source}/.sl64_gcc482
-
-[output]
-# Must write $JOBID with two dollar signs, the first one escapes the second
-stderr_path = ${paths:output}/logs/$$JOBID.err
-list =
-    *.log, ${paths:output}/logs/;
-    *.root, ${paths:output}/output/
-
-[input]
-files = 
-    # ${paths:source}/hbt/UUpions.list, all, f
-    ${paths:source}/hbt/AuAupions.list, all, f
-commands =
-    # cp foo bar;
-    # root -b macro.C('inputFile.root', 'outputFile.root');
-    echo Hello World
-
 [generator]
 location = ${paths:output}/schedulerFiles
 report_location = ${paths:output}/schedulerFiles
+
+[sandbox]
+package_name = femtoPackage_Vz6
+installer_option =
+files =
+   file:${paths:source}/hbt;
+   file:${paths:source}/.sl64_gcc482
+
+[input]
+files = 
+    # filelist:${paths:source}/hbt/UUpions.list, all
+    filelist:${paths:source}/hbt/AuAupions.list, all
+commands =
+
+[output]
+# Must write $JOBID with two dollar signs, the first one escapes the second
+stderr_path = file:${paths:output}/logs/$$JOBID.err
+paths =
+    file:${paths:output}/logs/, *.log;
+    file:${paths:output}/output/, *.root
+
