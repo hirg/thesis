@@ -64,9 +64,6 @@ void AziFemAnalysis(const TString fileList = "hbt/AuAupions.list",
     const vector<Float_t> multRange = config.getVF("multRange");
     const Int_t nVzBins = config.getI("nVzBins");
     // const vector<Float_t> vzRange = config.getVF("vzRange");
-    vector<Float_t> vzRange;
-    vzRange.push_back(vzLow);
-    vzRange.push_back(vzHigh);
 
 	//------------------- Instantiate Cut Objects ------------------//
 
@@ -99,7 +96,7 @@ void AziFemAnalysis(const TString fileList = "hbt/AuAupions.list",
 
         eventCut[i]->SetVx(-1*vx, vx);
         eventCut[i]->SetVy(-1*vy, vy);
-        eventCut[i]->SetVz(-1*vz, vz);
+        eventCut[i]->SetVz(vzLow, vzHigh);
         eventCut[i]->SetZdc(zdc.at(zdcBin), zdc.at(zdcBin+1));
     }
 
@@ -168,7 +165,7 @@ void AziFemAnalysis(const TString fileList = "hbt/AuAupions.list",
 	QoslCMSCorrFctnRPkT* qOslRPCF[2];
     for(Int_t i = 0; i <=1; i++)
     {
-        azifemAnalysis[i] = new StHbtReactionPlaneAnalysis(ptSwitch,nEPBins,rpRange[0],rpRange[1],nMultBins,multRange[0],multRange[1],nVzBins,vzRange[0],vzRange[1]);
+        azifemAnalysis[i] = new StHbtReactionPlaneAnalysis(ptSwitch,nEPBins,rpRange[0],rpRange[1],nMultBins,multRange[0],multRange[1],nVzBins,vzLow,vzHigh);
         azifemAnalysis[i]->SetEventCut(eventCut[i]);
         azifemAnalysis[i]->SetFirstParticleCut(trackCut[i]);
         azifemAnalysis[i]->SetSecondParticleCut(trackCut[i]);
@@ -190,7 +187,7 @@ void AziFemAnalysis(const TString fileList = "hbt/AuAupions.list",
 	StChain* chain = new StChain("StChain");
 	chain->SetDebug(0);
 
-	StHbtPionDstReader* reader = new StHbtPionDstReader("",fileList.Data(),"root",99);
+	StHbtPionDstReader* reader = new StHbtPionDstReader("",fileList.Data(),"root",999);
     reader->setSel(sel);
 	StHbtMaker* hbtMaker = new StHbtMaker;
 	hbtMaker->HbtManager()->SetEventReader(reader);
