@@ -28,8 +28,8 @@ list =
 
 [input]
 files = 
-    # ${paths:source}/hbt/UUpions.list, all, f
-    ${paths:source}/hbt/AuAupions.list, all, f
+    # filelist:${paths:source}/hbt/UUpions.list, all
+    filelist:${paths:source}/hbt/AuAupions.list, all
 commands =
     # root -b QA/computeResolution.C\(\"$$FILELIST\",\"UUQA_$${JOBID}.root\"\) >& AuAuQA_$${JOBID}.log;
     root -b QA/computeResolution.C\(\"$$FILELIST\",\"AuAuQA_$${JOBID}.root\"\) >& AuAuQA_$${JOBID}.log;
