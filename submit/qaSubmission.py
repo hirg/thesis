@@ -23,7 +23,3 @@ if __name__ == '__main__':
 
     if args.s:
         call(['star-submit', args.xml_file])
-
-
-#     if args.s:
-#         call(['star-submit', args.xml_file])

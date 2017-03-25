@@ -22,10 +22,10 @@ files =
 
 [output]
 # Must write $JOBID with two dollar signs, the first one escapes the second
-stderr_path = ${paths:output}/logs/$$JOBID.err
+stderr_path = file:${paths:output}/logs/$$JOBID.err
 paths =
-    *.log, ${paths:output}/logs/;
-    *.root, ${paths:output}/output/
+    file:${paths:output}/logs/, *.log;
+    file:${paths:output}/output/, *.root
 
 [input]
 files = 
