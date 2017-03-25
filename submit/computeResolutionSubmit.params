@@ -12,27 +12,28 @@ fileListSyntax = xrootd
 minFilesPerProcess = 10
 maxFilesPerProcess = 15
 
-[package]
+[sandbox]
 package_name = QAPackage
+installer_option =
 files =
-   ${paths:source}/QA;
-   ${paths:source}/src;
-   ${paths:source}/.sl64_gcc482
+   file:${paths:source}/QA;
+   file:${paths:source}/src;
+   file:${paths:source}/.sl64_gcc482
 
 [output]
 # Must write $JOBID with two dollar signs, the first one escapes the second
 stderr_path = ${paths:output}/logs/$$JOBID.err
-list =
+paths =
     *.log, ${paths:output}/logs/;
     *.root, ${paths:output}/output/
 
 [input]
 files = 
-    # filelist:${paths:source}/hbt/UUpions.list, all
-    filelist:${paths:source}/hbt/AuAupions.list, all
+    filelist:${paths:source}/hbt/UUpions.list, all
+    # filelist:${paths:source}/hbt/AuAupions.list, all
 commands =
-    # root -b QA/computeResolution.C\(\"$$FILELIST\",\"UUQA_$${JOBID}.root\"\) >& AuAuQA_$${JOBID}.log;
-    root -b QA/computeResolution.C\(\"$$FILELIST\",\"AuAuQA_$${JOBID}.root\"\) >& AuAuQA_$${JOBID}.log;
+    root -b QA/computeResolution.C\(\"$$FILELIST\",\"UUQA_$${JOBID}.root\"\) >& AuAuQA_$${JOBID}.log;
+    # root -b QA/computeResolution.C\(\"$$FILELIST\",\"AuAuQA_$${JOBID}.root\"\) >& AuAuQA_$${JOBID}.log;
 
 [generator]
 location = ${paths:output}/schedulerFiles
