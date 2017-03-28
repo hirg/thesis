@@ -34,7 +34,7 @@ QoslCMSCorrFctnkT::QoslCMSCorrFctnkT(char* title,
         TString TitNum = "Num";
         TitNum += title;
         TitNum += TitKt.Data();
-        mNumerator[j] = new TH3S(TitNum.Data(),TitNum.Data(),nbinso,QoLo,QoHi,
+        mNumerator[j] = new TH3F(TitNum.Data(),TitNum.Data(),nbinso,QoLo,QoHi,
                     nbinss,QsLo,QsHi,
                     nbinsl,QlLo,QlHi);
 
@@ -42,7 +42,7 @@ QoslCMSCorrFctnkT::QoslCMSCorrFctnkT(char* title,
         TString TitDen = "Den";
         TitDen += title;
         TitDen += TitKt.Data();
-        mDenominator[j] = new TH3S(TitDen.Data(),TitDen.Data(),nbinso,QoLo,QoHi,
+        mDenominator[j] = new TH3F(TitDen.Data(),TitDen.Data(),nbinso,QoLo,QoHi,
                       nbinss,QsLo,QsHi,
                       nbinsl,QlLo,QlHi);
 

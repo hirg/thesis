@@ -5,7 +5,7 @@
 #include "StHbtMaker/Base/StHbtPairCut.h"
 #include "StHbtMaker/Infrastructure/StHbtCoulomb.h"
 
-class TH3S;
+class TH3F;
 
 class QoslCMSCorrFctnRPkT : public StHbtCorrFctn {
 public:
@@ -28,14 +28,14 @@ public:
 	int nRPbins;
   int nKtBins;
   
-  TH3S* Numerator3D(const int& rpBin, const int& ktBin);
-  TH3S* Denominator3D(const int& rpBin, const int& ktBin);
+  TH3F* Numerator3D(const int& rpBin, const int& ktBin);
+  TH3F* Denominator3D(const int& rpBin, const int& ktBin);
   StHbt3DHisto* QinvHisto3D(const int& rpBin, const int& ktBin);
   StHbt3DHisto* CoulHisto3D(const int& rpBin, const int& ktBin);
 
 private:
-  TH3S* mNumerator[12][5];
-  TH3S* mDenominator[12][5];
+  TH3F* mNumerator[12][5];
+  TH3F* mDenominator[12][5];
   StHbt3DHisto* mQinvHisto[12][5];
   StHbt3DHisto* mCoulHisto[12][5];
 
@@ -52,8 +52,8 @@ private:
 #endif
 };
 
-inline  TH3S* QoslCMSCorrFctnRPkT::Numerator3D(const int& rpBin, const int& ktBin){return mNumerator[rpBin][ktBin];}
-inline  TH3S* QoslCMSCorrFctnRPkT::Denominator3D(const int& rpBin, const int& ktBin){return mDenominator[rpBin][ktBin];}
+inline  TH3F* QoslCMSCorrFctnRPkT::Numerator3D(const int& rpBin, const int& ktBin){return mNumerator[rpBin][ktBin];}
+inline  TH3F* QoslCMSCorrFctnRPkT::Denominator3D(const int& rpBin, const int& ktBin){return mDenominator[rpBin][ktBin];}
 inline  StHbt3DHisto* QoslCMSCorrFctnRPkT::QinvHisto3D(const int& rpBin, const int& ktBin){return mQinvHisto[rpBin][ktBin];}
 inline  StHbt3DHisto* QoslCMSCorrFctnRPkT::CoulHisto3D(const int& rpBin, const int& ktBin){return mCoulHisto[rpBin][ktBin];}
 inline  void QoslCMSCorrFctnRPkT::SetSpecificPairCut(StHbtPairCut* pc){mPairCut=pc;}

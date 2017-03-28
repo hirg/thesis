@@ -34,7 +34,7 @@ QoslCMSCorrFctnRPkT::QoslCMSCorrFctnRPkT(char* title, const int& nbinso, const f
       TitNum += title;
       TitNum += TitAngle.Data();
       TitNum += TitKt.Data();
-      mNumerator[i][j] = new TH3S(TitNum.Data(),TitNum.Data(),nbinso,QoLo,QoHi,
+      mNumerator[i][j] = new TH3F(TitNum.Data(),TitNum.Data(),nbinso,QoLo,QoHi,
 				    nbinss,QsLo,QsHi,
 				    nbinsl,QlLo,QlHi);
 
@@ -43,7 +43,7 @@ QoslCMSCorrFctnRPkT::QoslCMSCorrFctnRPkT(char* title, const int& nbinso, const f
       TitDen += title;
       TitDen += TitAngle.Data();
       TitDen += TitKt.Data();
-      mDenominator[i][j] = new TH3S(TitDen.Data(),TitDen.Data(),nbinso,QoLo,QoHi,
+      mDenominator[i][j] = new TH3F(TitDen.Data(),TitDen.Data(),nbinso,QoLo,QoHi,
 				      nbinss,QsLo,QsHi,
 				      nbinsl,QlLo,QlHi);
 
