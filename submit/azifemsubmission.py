@@ -8,19 +8,25 @@ file_list = '$FILELIST'
 config_file = 'hbt/femto.config'
 macro = 'hbt/AziFemAnalysis.C'
 argument_mask = '\\(\\"{}\\",\\"{}\\",{},{},{},{},{},\\"{}\\",\\"{}\\",{}\\)' 
-# species = 'UU'
-species = 'AuAu'
+species = 'UU'
+# species = 'AuAu'
 submission_params_file = 'submit/azifemSubmit.params'
 n_events = 99999999
 
-min_files = [345, 250, 185, 145, 115, 105, 
-             105, 110, 125, 150, 200, 290]
+# AuAu - 3362 Files
+# min_files = [329, 229, 176, 122, 114, 95, 95, 98, 114, 149, 194, 281]
+# max_files = [337, 241, 177, 135, 116, 99, 99, 102, 116, 153, 198, 271]
+
+# UU - 710 Files
+min_files = [47, 38, 20, 17, 10, 10, 10, 10, 17, 20, 30, 47]
+max_files = [51, 42, 23, 21, 14, 14, 14, 14, 21, 23, 34, 51]
+
 n_zdcBins = 2
 n_q2OrMultBins = 2
 n_q2MultBins = 5
 n_vzBins = 12
 
-for i_zdc in range(1, n_zdcBins):
+for i_zdc in range(0, n_zdcBins):
     for q2OrMult in range(1,n_q2OrMultBins):
         for i_q2MultBins in range(0,n_q2MultBins):
             for i_vz in range(0,n_vzBins):
@@ -33,7 +39,7 @@ for i_zdc in range(1, n_zdcBins):
                     mult_bin = i_q2MultBins
                     bin_label = 'mult_' + str(i_q2MultBins)
 
-                job_label = '{}Femto200_zdc_{}_{}_Vz_{}'.format(
+                job_label = '{}Femto_zdc_{}_{}_Vz_{}'.format(
                                                 species, i_zdc, bin_label, i_vz)
 
                 # Set up the command
@@ -53,7 +59,7 @@ for i_zdc in range(1, n_zdcBins):
 
                 # Set up the job/request
                 settings = {'minFilesPerProcess':str(min_files[i_vz]), 
-                            'maxFilesPerProcess':str(min_files[i_vz]+10)}
+                            'maxFilesPerProcess':str(max_files[i_vz])}
                 job = Job(submission_params_file)
                 job.config['attributes'].update(settings)
                 job.add_commands(command)
