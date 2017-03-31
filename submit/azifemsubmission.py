@@ -8,18 +8,18 @@ file_list = '$FILELIST'
 config_file = 'hbt/femto.config'
 macro = 'hbt/AziFemAnalysis.C'
 argument_mask = '\\(\\"{}\\",\\"{}\\",{},{},{},{},{},\\"{}\\",\\"{}\\",{}\\)' 
-species = 'UU'
-# species = 'AuAu'
+# species = 'UU'
+species = 'AuAu'
 submission_params_file = 'submit/azifemSubmit.params'
 n_events = 99999999
 
-# AuAu - 3362 Files
-# min_files = [329, 229, 176, 122, 114, 95, 95, 98, 114, 149, 194, 281]
-# max_files = [337, 241, 177, 135, 116, 99, 99, 102, 116, 153, 198, 271]
+# AuAu - 3341 Files
+min_files = [326, 234, 173, 121, 101, 101, 74, 101, 117, 149, 189, 272]
+max_files = [335, 239, 176, 140, 120, 108, 99, 108, 124, 152, 197, 279]
 
 # UU - 710 Files
-min_files = [47, 38, 20, 17, 10, 10, 10, 10, 17, 20, 30, 47]
-max_files = [51, 42, 23, 21, 14, 14, 14, 14, 21, 23, 34, 51]
+# min_files = [47, 38, 20, 17, 10, 10, 10, 10, 17, 20, 30, 47]
+# max_files = [51, 42, 23, 21, 14, 14, 14, 14, 21, 23, 34, 51]
 
 n_zdcBins = 2
 n_q2OrMultBins = 2
