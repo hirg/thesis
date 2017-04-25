@@ -74,6 +74,7 @@ void computeResolution(	const TString inFile = "testPion.list",
         "subResSquaredq2InclusiveZdcCut","subResSquaredq2InclusiveZdcCut",
         5, -0.5, 4.5, 2, -0.5, 1.5);
 
+    // Vs. Runnumber
     TProfile* avgSubresVsRunnumber = new TProfile(
         "avgSubresVsRunnumber", "avgSubresVsRunnumber", 
         nRuns, 0, nRuns);
@@ -83,21 +84,24 @@ void computeResolution(	const TString inFile = "testPion.list",
     TH1I* nEventsPerRunnumber = new TH1I(
         "nEventsPerRunnumber", "nEventsPerRunnumber", 
         nRuns, 0, nRuns);
+
+    // Refmult/q2 Dists
 	TH1F* refmultDist = new TH1F("refmultDist","Refmult Distribution",1000,-0.5,999.5);
-    TH1F* q2Dist = new TH1F("q2Dist","q2 Distribution",1000,0,5);
+	TH1F* refmultDistInclusiveZdcCut[4];
+	TH1F* refmultDistExclusiveZdcCut[4];
     TH1F* refmultDeltaPsiDist = new TH1F(
         "refmultDeltaPsiDist","#Delta #Psi_{2} Distribution - refmult",
         200, -1*pi, pi);
+
+    TH1F* q2Dist = new TH1F("q2Dist","q2 Distribution",1000,0,5);
     TH1F* q2DeltaPsiDist = new TH1F(
         "q2DeltaPsiDist","#Delta #Psi_{2} Distribution - q2",
         200, -1*pi, pi);
-	TH1F* refmultDistExclusiveZdcCut[4];
     TH1F* q2DistExclusiveZdcCut[4];
-	TH1F* refmultDistInclusiveZdcCut[4];
     TH1F* q2DistInclusiveZdcCut[4];
 
-	TH2F* rVertex = new TH2F("rVertex","V_{y} vs. V_{x}",200,-2,2,200,-2,2);
     TH1F* zVertex = new TH1F("zVertex","V_{z}",500,-60,60);
+	TH2F* rVertex = new TH2F("rVertex","V_{y} vs. V_{x}",200,-2,2,200,-2,2);
 	TH2F* refmultq2 = new TH2F("refmultq2","Refmult vs. q2",1000,0,5,1000,-0.5,999.5);
 	TH2F* zdcEvsZdcW = new TH2F("zdcEvsZdcW","East ZDC vs. West ZDC",700,0,2100,700,0,2100);
     TH2F* zdcBinVsVz = new TH2F("zdcBinVsVz", "Zdc Bin vs. V_{z}", 60, -30, 30, 4, -0.5, 3.5);
