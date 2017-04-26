@@ -5,7 +5,7 @@
 
 #include <vector>
 
-void AziFemAnalysis(const TString fileList = "hbt/AuAupions.list",
+void AziFemAnalysis(const TString fileList = "AuAupions.list",
 					   const TString outFile = "aziFemTestOut.root",
                        const Float_t vzLow = 999,
                        const Float_t vzHigh = -999,
@@ -296,7 +296,7 @@ void AziFemAnalysis(const TString fileList = "hbt/AuAupions.list",
 				qOslRPCF[i]->Numerator3D(k,j)->Write();
 				qOslRPCF[i]->Denominator3D(k,j)->Write();
 				qOslRPCF[i]->CoulHisto3D(k,j)->Write();
-				// qOslRPCF[i]->QinvHisto3D(k,j)->Write();
+				qOslRPCF[i]->QinvHisto3D(k,j)->Write();
             } // End loop over phi bins
 
             qOslCF[i]->Numerator3D(j)->Write();
