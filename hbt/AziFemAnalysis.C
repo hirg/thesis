@@ -302,6 +302,7 @@ void AziFemAnalysis(const TString fileList = "AuAupions.list",
             qOslCF[i]->Numerator3D(j)->Write();
             qOslCF[i]->Denominator3D(j)->Write();
             qOslCF[i]->CoulHisto3D(j)->Write();
+            qOslCF[i]->QinvHisto3D(j)->Write();
         } // End loop over kt bins
     } // End loop over pi+ / pi-
 

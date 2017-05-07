@@ -92,7 +92,7 @@ void QoslCMSCorrFctnRPkT::Finish(){
   // here is where we should normalize, fit, etc...
  for(int i=0; i<nRPbins; i++) {
   for(int j=0; j<nKtBins; j++) {
-   mQinvHisto[i][j]->Divide(mDenominator[i][j]);
+   // mQinvHisto[i][j]->Divide(mDenominator[i][j]);
   }
  }
 
