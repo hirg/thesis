@@ -26,7 +26,7 @@ n_q2OrMultBins = 2
 n_q2MultBins = 5
 n_vzBins = 12
 
-for i_zdc in range(2, n_zdcBins):
+for i_zdc in range(0, n_zdcBins):
     for q2OrMult in range(0,n_q2OrMultBins):
         for i_q2MultBins in range(0,n_q2MultBins):
             for i_vz in range(0,n_vzBins):
