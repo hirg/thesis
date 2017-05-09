@@ -12,21 +12,21 @@ submission_params_file = 'submit/azifemSubmit.params'
 n_events = 99999999
 
 # AuAu - 3341 Files
-min_files = [326, 234, 173, 121, 101, 101, 74, 101, 117, 149, 189, 272]
-max_files = [335, 239, 176, 140, 120, 108, 99, 108, 124, 152, 197, 279]
-species = 'AuAu'
+# min_files = [326, 234, 173, 121, 101, 101, 74, 101, 117, 149, 189, 272]
+# max_files = [335, 239, 176, 140, 120, 108, 99, 108, 124, 152, 197, 279]
+# species = 'AuAu'
 
 # UU - 710 Files
-# min_files = [47, 38, 20, 17, 10, 10, 10, 10, 17, 20, 30, 47]
-# max_files = [51, 42, 23, 21, 14, 14, 14, 14, 21, 23, 34, 51]
-# species = 'UU'
+min_files = [47, 38, 20, 17, 10, 10, 10, 10, 17, 20, 30, 47]
+max_files = [51, 42, 23, 21, 14, 14, 14, 14, 21, 23, 34, 51]
+species = 'UU'
 
-n_zdcBins = 2
-n_q2OrMultBins = 2
+n_zdcBins = 4
+n_q2OrMultBins = 1
 n_q2MultBins = 5
 n_vzBins = 12
 
-for i_zdc in range(0, n_zdcBins):
+for i_zdc in range(2, n_zdcBins):
     for q2OrMult in range(0,n_q2OrMultBins):
         for i_q2MultBins in range(0,n_q2MultBins):
             for i_vz in range(0,n_vzBins):
