@@ -9,8 +9,8 @@ output = ${scratch}/QA
 datasetSplitting = fileBased
 simulateSubmission = false
 fileListSyntax = xrootd
-minFilesPerProcess = 10
-maxFilesPerProcess = 15
+minFilesPerProcess = 100
+maxFilesPerProcess = 150
 
 [sandbox]
 package_name = QAPackage
@@ -29,11 +29,11 @@ paths =
 
 [input]
 files = 
-    filelist:${paths:source}/hbt/UUpions.list, all
-    # filelist:${paths:source}/hbt/AuAupions.list, all
+    # filelist:${paths:source}/hbt/UUpions.list, all
+    filelist:${paths:source}/hbt/AuAupions.list, all
 commands =
-    root -b QA/computeResolution.C\(\"$$FILELIST\",\"UUQA_$${JOBID}.root\"\) >& AuAuQA_$${JOBID}.log;
-    # root -b QA/computeResolution.C\(\"$$FILELIST\",\"AuAuQA_$${JOBID}.root\"\) >& AuAuQA_$${JOBID}.log;
+    # root -b QA/computeResolution.C\(\"$$FILELIST\",\"UUQA_$${JOBID}.root\",\"QA/computeResolution.config\",kTRUE\) >& UUQA_$${JOBID}.log;
+    root -b QA/computeResolution.C\(\"$$FILELIST\",\"AuAuQA_$${JOBID}.root\",\"QA/computeResolution.config\",kFALSE\) >& AuAuQA_$${JOBID}.log;
 
 [generator]
 location = ${paths:output}/schedulerFiles
