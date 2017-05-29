@@ -15,7 +15,7 @@ Int_t runDay(Int_t runId);
 void computeResolution(	const TString inFile = "testPion.list", 
 						const char* outFile = "testOut.root", 
                         const string configFile = "QA/computeResolution.config",
-                        const Bool_t uuNotAuAu = kFALSE,
+                        const Bool_t uuNotAuAu = kTRUE,
                         Int_t nEvents = 999999
                         )
 {
@@ -43,7 +43,8 @@ void computeResolution(	const TString inFile = "testPion.list",
     Float_t resMult  = 0, resq2 = 0;
     Float_t res = 0, q2 = 0;
     Float_t Vx = 0, Vy = 0, Vz = 0;
-    Int_t refmultBin = 0, refmult = 0, tofmult = 0; 
+    Int_t refmultBin = 0, tofmult = 0; 
+    Float_t refmult = 0;
     Int_t runId = 0;
     Event* event = 0;
 
@@ -63,16 +64,16 @@ void computeResolution(	const TString inFile = "testPion.list",
     // Resolution TProfile's
 	TProfile2D* subResSquaredRefmultExclusiveZdcCut = new TProfile2D(
         "subResSquaredRefmultExclusiveZdcCut","subResSquaredRefmultExclusiveZdcCut",
-        5, -0.5, 4.5, 2, -0.5, 1.5);
+        5, -0.5, 4.5, 4, -0.5, 3.5);
 	TProfile2D* subResSquaredq2ExclusiveZdcCut = new TProfile2D(
         "subResSquaredq2ExclusiveZdcCut","subResSquaredq2ExclusiveZdcCut",
-        5, -0.5, 4.5, 2, -0.5, 1.5);
+        5, -0.5, 4.5, 4, -0.5, 3.5);
 	TProfile2D* subResSquaredRefmultInclusiveZdcCut = new TProfile2D(
         "subResSquaredRefmultInclusiveZdcCut","subResSquaredRefmultInclusiveZdcCut",
-        5, -0.5, 4.5, 2, -0.5, 1.5);
+        5, -0.5, 4.5, 4, -0.5, 3.5);
 	TProfile2D* subResSquaredq2InclusiveZdcCut = new TProfile2D(
         "subResSquaredq2InclusiveZdcCut","subResSquaredq2InclusiveZdcCut",
-        5, -0.5, 4.5, 2, -0.5, 1.5);
+        5, -0.5, 4.5, 4, -0.5, 3.5);
 
     // Vs. Runnumber
     TProfile* avgSubresVsRunnumber = new TProfile(
@@ -178,6 +179,7 @@ void computeResolution(	const TString inFile = "testPion.list",
         q2DeltaPsiDist->Fill(psiAq2 - psiBq2);
 
         refmult = event->GetRefMultCorr();
+        refmultBin = azifem::getRefmultBin(refmult, uuNotAuAu);
         tofmult = event->GetTofMult();
         q2 = event->Getq2(1);
         runId = event->GetRunID();
@@ -192,29 +194,26 @@ void computeResolution(	const TString inFile = "testPion.list",
         if(refmult >= 200)
         {
             if(zdcBinLinear >= 0) {
-                refmultDistInclusiveZdcCut[zdcBinLinear]->Fill(refmult);
-                q2DistInclusiveZdcCut[zdcBinLinear]->Fill(q2);
+                for(Int_t iZdc = zdcBinLinear; iZdc <= 3; iZdc++)
+                {
+                    refmultDistInclusiveZdcCut[iZdc]->Fill(refmult);
+                    q2DistInclusiveZdcCut[iZdc]->Fill(q2);
+
+                    subResSquaredRefmultInclusiveZdcCut->Fill(refmultBin, iZdc, resMult);
+                    subResSquaredq2InclusiveZdcCut->Fill(azifem::getq2Bin(q2), iZdc, resq2);
+
+                }
+
                 refmultDistExclusiveZdcCut[zdcBinLinear]->Fill(refmult);
                 q2DistExclusiveZdcCut[zdcBinLinear]->Fill(q2);
 
-                subResSquaredRefmultInclusiveZdcCut->Fill(azifem::getRefmultBin(refmult, uuNotAuAu), zdcBinLinear, resMult);
-                subResSquaredq2InclusiveZdcCut->Fill(azifem::getq2Bin(q2), zdcBinLinear, resq2);
-                subResSquaredRefmultExclusiveZdcCut->Fill(azifem::getRefmultBin(refmult, uuNotAuAu), zdcBinLinear, resMult);
+                subResSquaredRefmultExclusiveZdcCut->Fill(refmultBin, zdcBinLinear, resMult);
                 subResSquaredq2ExclusiveZdcCut->Fill(azifem::getq2Bin(q2), zdcBinLinear, resq2);
             }
 
-            if(zdcBinLinear == 0) {
-                refmultDistInclusiveZdcCut[1]->Fill(refmult);
-                q2DistInclusiveZdcCut[1]->Fill(q2);
-
-                subResSquaredRefmultInclusiveZdcCut->Fill(azifem::getRefmultBin(refmult, uuNotAuAu), 1, resMult);
-                subResSquaredq2InclusiveZdcCut->Fill(azifem::getq2Bin(q2), 1, resq2);
-            }
-
-
             q2Dist->Fill(q2);
-            q2ByZdcLog[zdcBinLog]->Fill(q2);
-            refmultByZdcLog[zdcBinLog]->Fill(refmult);
+            // q2ByZdcLog[zdcBinLog]->Fill(q2);
+            // refmultByZdcLog[zdcBinLog]->Fill(refmult);
         } // If refmult >= 200
 
         refmultq2->Fill(q2,refmult);
