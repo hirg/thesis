@@ -30,17 +30,17 @@ AverageSepCorrFctn::AverageSepCorrFctn(char* title, const int& nbinsQ, const flo
 					     const int& nbinsExSep, const float& ExSepLo, const float& ExSepHi){
   // set up numeratorS
   char Tit[100];
-  sprintf(Tit,"2DNum");
+  sprintf(Tit,"AvgSep_2DNum");
   strcat(Tit,title);
   mNumerator2D = new StHbt2DHisto(Tit,title,nbinsQ,QLo,QHi,nbinsExSep,ExSepLo,ExSepHi);
 
   // set up denominatorS
-  sprintf(Tit,"2DDen");
+  sprintf(Tit,"AvgSep_2DDen");
   strcat(Tit,title);
   mDenominator2D = new StHbt2DHisto(Tit,title,nbinsQ,QLo,QHi,nbinsExSep,ExSepLo,ExSepHi);
 
   // set up ratioS
-  sprintf(Tit,"2DRat");
+  sprintf(Tit,"AvgSep_2DRat");
   strcat(Tit,title);
   mRatio2D = new StHbt2DHisto(Tit,title,nbinsQ,QLo,QHi,nbinsExSep,ExSepLo,ExSepHi);
 

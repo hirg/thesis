@@ -1,38 +1,38 @@
 /***************************************************************************
  *
- * Author: Mercedes Lopez Noriega, OSU, mercedes@pacific.mps.ohio-state.edu
+ * Author: John Campbell, OSU, campbell.1119@osu.edu
  *
  ***************************************************************************
  *
  * Description: part of STAR HBT Framework: StHbtMaker package
- *   2D correlation function: Qinv vs. Fraction of merged rows.
+ *   2D correlation function: Qinv vs. Quality
  *
  **************************************************************************/
 
 #include "TMath.h"
-#include "StHbtMaker/CorrFctn/FracMergRowvsQinv.h"
+#include "StHbtMaker/CorrFctn/QualityvsQinv.h"
 #include <cstdio>
 
 #ifdef __ROOT__ 
-ClassImp(FracMergRowvsQinv)
+ClassImp(QualityvsQinv)
 #endif
 
 //____________________________
-  FracMergRowvsQinv::FracMergRowvsQinv(char* title, const int& nbinsX, const float& XLo, const float& XHi,
+  QualityvsQinv::QualityvsQinv(char* title, const int& nbinsX, const float& XLo, const float& XHi,
 					   const int& nbinsY, const float& YLo, const float& YHi){
   // set up numerator
   char Tit[100];
-  sprintf(Tit,"FracMerged_Num2D");
+  sprintf(Tit,"Quality_Num2D");
   strcat(Tit,title);
   mNumerator2D = new StHbt2DHisto(Tit,title,nbinsX,XLo,XHi,nbinsY,YLo,YHi);
 
   // set up denominator
-  sprintf(Tit,"FracMerged_Den2D");
+  sprintf(Tit,"Quality_Den2D");
   strcat(Tit,title);
   mDenominator2D = new StHbt2DHisto(Tit,title,nbinsX,XLo,XHi,nbinsY,YLo,YHi);
 
   // set up ratio
-  sprintf(Tit,"FracMerged_Rat2D");
+  sprintf(Tit,"Quality_Rat2D");
   strcat(Tit,title);
   mRatio2D = new StHbt2DHisto(Tit,title,nbinsX,XLo,XHi,nbinsY,YLo,YHi);
   
@@ -41,19 +41,19 @@ ClassImp(FracMergRowvsQinv)
   mRatio2D->Sumw2();
 }
 //____________________________
-FracMergRowvsQinv::~FracMergRowvsQinv(){
+QualityvsQinv::~QualityvsQinv(){
   delete mNumerator2D;
   delete mDenominator2D;
   delete mRatio2D; 
 }
 //_________________________
-void FracMergRowvsQinv::Finish(){
+void QualityvsQinv::Finish(){
   mRatio2D->Divide(mNumerator2D,mDenominator2D,1.0,1.0);
 }
 
 
 //____________________________
-StHbtString FracMergRowvsQinv::Report(){
+StHbtString QualityvsQinv::Report(){
   string stemp = "Qinv Correlation Function Report:\n";
   char ctemp[100];
   sprintf(ctemp,"Number of entries in numerator:\t%E\n",mNumerator2D->GetEntries());
@@ -66,15 +66,15 @@ StHbtString FracMergRowvsQinv::Report(){
   return returnThis;
 }
 //____________________________
-void FracMergRowvsQinv::AddRealPair(const StHbtPair* pair){
+void QualityvsQinv::AddRealPair(const StHbtPair* pair){
    double Qinv = fabs(pair->qInv()); 
    mNumerator2D->Fill(Qinv,
-		      pair->getFracOfMergedRow(),1.0);
+		      pair->quality(),1.0);
 }
 
 //____________________________
-void FracMergRowvsQinv::AddMixedPair(const StHbtPair* pair){
+void QualityvsQinv::AddMixedPair(const StHbtPair* pair){
   double Qinv = fabs(pair->qInv()); 
   mDenominator2D->Fill(Qinv,
-		       pair->getFracOfMergedRow(),1.0);
+		       pair->quality(),1.0);
 }
