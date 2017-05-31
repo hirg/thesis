@@ -9,8 +9,8 @@ output = ${scratch}/200GeV
 datasetSplitting = fileBased
 simulateSubmission = false
 fileListSyntax = xrootd
-minFilesPerProcess = 10
-maxFilesPerProcess = 15
+minFilesPerProcess = 2
+maxFilesPerProcess = 4
 
 [generator]
 location = ${paths:output}/schedulerFiles

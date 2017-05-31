@@ -67,14 +67,34 @@ StHbtString QualityvsQinv::Report(){
 }
 //____________________________
 void QualityvsQinv::AddRealPair(const StHbtPair* pair){
-   double Qinv = fabs(pair->qInv()); 
-   mNumerator2D->Fill(Qinv,
-		      pair->quality(),1.0);
+  double aveSep = pair->NominalTpcAverageSeparation();
+  double fmr = pair->getFracOfMergedRow();
+  double quality = pair->quality();
+
+  Bool_t pass = ( (fmr >= fmrLo) &&
+                  (fmr <= fmrHi) &&
+                  (aveSep >= aveSepLo) &&
+                  (aveSep <= aveSepHi) );
+
+    if( pass ) { 
+      double Qinv = fabs(pair->qInv());   // note - qInv() will be negative for identical pairs...
+      mNumerator2D->Fill(Qinv,quality,1.0);
+    }
 }
 
 //____________________________
 void QualityvsQinv::AddMixedPair(const StHbtPair* pair){
-  double Qinv = fabs(pair->qInv()); 
-  mDenominator2D->Fill(Qinv,
-		       pair->quality(),1.0);
+  double aveSep = pair->NominalTpcAverageSeparation();
+  double fmr = pair->getFracOfMergedRow();
+  double quality = pair->quality();
+
+  Bool_t pass = ( (fmr >= fmrLo) &&
+                  (fmr <= fmrHi) &&
+                  (aveSep >= aveSepLo) &&
+                  (aveSep <= aveSepHi) );
+
+    if( pass ) { 
+      double Qinv = fabs(pair->qInv());   // note - qInv() will be negative for identical pairs...
+      mDenominator2D->Fill(Qinv,quality,1.0);
+    }
 }

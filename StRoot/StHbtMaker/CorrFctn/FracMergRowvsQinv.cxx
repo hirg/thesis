@@ -67,14 +67,34 @@ StHbtString FracMergRowvsQinv::Report(){
 }
 //____________________________
 void FracMergRowvsQinv::AddRealPair(const StHbtPair* pair){
-   double Qinv = fabs(pair->qInv()); 
-   mNumerator2D->Fill(Qinv,
-		      pair->getFracOfMergedRow(),1.0);
+  double aveSep = pair->NominalTpcAverageSeparation();
+  double fmr = pair->getFracOfMergedRow();
+  double quality = pair->quality();
+
+  Bool_t pass = ( (quality >= qualityLo) &&
+                  (quality <= qualityHi) &&
+                  (aveSep >= aveSepLo) &&
+                  (aveSep <= aveSepHi) );
+
+    if( pass ) { 
+      double Qinv = fabs(pair->qInv());   // note - qInv() will be negative for identical pairs...
+      mNumerator2D->Fill(Qinv,fmr,1.0);
+    }
 }
 
 //____________________________
 void FracMergRowvsQinv::AddMixedPair(const StHbtPair* pair){
-  double Qinv = fabs(pair->qInv()); 
-  mDenominator2D->Fill(Qinv,
-		       pair->getFracOfMergedRow(),1.0);
+  double aveSep = pair->NominalTpcAverageSeparation();
+  double fmr = pair->getFracOfMergedRow();
+  double quality = pair->quality();
+
+  Bool_t pass = ( (quality >= qualityLo) &&
+                  (quality <= qualityHi) &&
+                  (aveSep >= aveSepLo) &&
+                  (aveSep <= aveSepHi) );
+
+    if( pass ) { 
+      double Qinv = fabs(pair->qInv());   // note - qInv() will be negative for identical pairs...
+      mDenominator2D->Fill(Qinv,fmr,1.0);
+    }
 }

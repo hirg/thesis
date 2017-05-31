@@ -39,6 +39,11 @@ public:
   StHbt2DHisto* Denominator2D();
   StHbt2DHisto* Ratio2D();
 
+  Float_t qualityLo = -1.;
+  Float_t qualityHi = 1.5;
+  Float_t fmrLo = -1.;
+  Float_t fmrHi = 1.5;
+
 private:
 
   StHbt2DHisto* mNumerator2D;

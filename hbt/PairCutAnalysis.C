@@ -86,7 +86,7 @@ void PairCutAnalysis(const TString fileList = "AuAupions.list",
         eventCut[i]->SetVx(-1*vx, vx);
         eventCut[i]->SetVy(-1*vy, vy);
         eventCut[i]->SetVz(vzLow, vzHigh);
-        eventCut[i]->SetZdc(zdc.at(0), zdc.at(3));
+        eventCut[i]->SetZdc(zdc.at(0), zdc.at(4));
     }
 
     eventCut[0]->AddCutMonitor(eventPass,eventFail); 
@@ -120,7 +120,7 @@ void PairCutAnalysis(const TString fileList = "AuAupions.list",
 
     // Pair Cuts - Set these wide open
     kTPairCut* ktCut = new kTPairCut();
-    ktCut->SetkTRange(-999, 999);
+    ktCut->SetkTRange(kt[0],kt[1]);
 
 	qualityPairCut* qualityCut = new qualityPairCut;
 	qualityCut->SetQualityCut(-999, 999);
@@ -151,12 +151,19 @@ void PairCutAnalysis(const TString fileList = "AuAupions.list",
 
     Int_t nBins = 200;
     Float_t qLo = 0, qHi = .4;
+    Float_t  fmrLo = 0, fmrHi = 0.1, qualityLo = -0.5, qualityHi = 0.6;
     StHbtReactionPlaneAnalysis* azifemAnalysis[2];
-    QualityvsQinv* splittingCut[2];
-	FracMergRowvsQinv* fmr[2];
-	AverageSepCorrFctn* avgSep[2];
+    QualityvsQinv* splittingCutLoose[2];
+    QualityvsQinv* splittingCutTight[2];
+	FracMergRowvsQinv* fmrLoose[2];
+	FracMergRowvsQinv* fmrTight[2];
+	AverageSepCorrFctn* avgSepLoose[2];
+	AverageSepCorrFctn* avgSepTight[2];
+
+
     for(Int_t i = 0; i <=1; i++)
     {
+
         azifemAnalysis[i] = new StHbtReactionPlaneAnalysis(ptSwitch,nEPBins,rpRange[0],rpRange[1],nMultBins,multRange[0],multRange[1],nVzBins,vzLow,vzHigh);
         azifemAnalysis[i]->SetEventCut(eventCut[i]);
         azifemAnalysis[i]->SetFirstParticleCut(trackCut[i]);
@@ -164,15 +171,38 @@ void PairCutAnalysis(const TString fileList = "AuAupions.list",
         azifemAnalysis[i]->SetPairCut(pairCut[i]);
         azifemAnalysis[i]->SetNumEventsToMix(nEventsToMix);
 
-        TString title = "";
-        if(i==0) {title += "PiMinus";}
-        if(i==1) {title += "PiPlus";}
-        splittingCut[i] = new QualityvsQinv(title.Data(),nBins,qLo,qHi,nBins,-0.5,1.0);
-        fmr[i] = new FracMergRowvsQinv(title.Data(),nBins,qLo,qHi,nBins,0,1.0);
-        avgSep[i] = new AverageSepCorrFctn(title.Data(),nBins,qLo,qHi,nBins,0,100);
-        azifemAnalysis[i]->AddCorrFctn(splittingCut[i]);
-        azifemAnalysis[i]->AddCorrFctn(fmr[i]);
-        azifemAnalysis[i]->AddCorrFctn(avgSep[i]);
+        TString titleTight = "";
+        TString titleLoose = "";
+        if(i==0) {titleTight += "Tight_PiMinus"; titleLoose += "Loose_PiMinus"; }
+        if(i==1) {titleTight += "Tight_PiPlus"; titleLoose += "Loose_PiPlus"; }
+
+        splittingCutLoose[i] = 
+            new QualityvsQinv(titleLoose.Data(),nBins,qLo,qHi,nBins,-0.5,1.0);
+        fmrLoose[i] = 
+            new FracMergRowvsQinv(titleLoose.Data(),nBins,qLo,qHi,nBins,0,1.0);
+        avgSepLoose[i] = 
+            new AverageSepCorrFctn(titleLoose.Data(),nBins,qLo,qHi,nBins,0,100);
+        splittingCutTight[i] = 
+            new QualityvsQinv(titleTight.Data(),nBins,qLo,qHi,nBins,-0.5,1.0);
+        fmrTight[i] = 
+            new FracMergRowvsQinv(titleTight.Data(),nBins,qLo,qHi,nBins,0,1.0);
+        avgSepTight[i] = 
+            new AverageSepCorrFctn(titleTight.Data(),nBins,qLo,qHi,nBins,0,100);
+        fmrTight[i].qualityLo = qualityLo;
+        fmrTight[i].qualityHi = qualityHi;
+        avgSepTight[i].qualityLo = qualityLo;
+        avgSepTight[i].qualityHi = qualityHi;
+        splittingCutTight[i].fmrLo = fmrLo;
+        splittingCutTight[i].fmrHi = fmrHi;
+        avgSepTight[i].fmrLo = fmrLo;
+        avgSepTight[i].fmrHi = fmrHi;
+
+        azifemAnalysis[i]->AddCorrFctn(splittingCutTight[i]);
+        azifemAnalysis[i]->AddCorrFctn(fmrTight[i]);
+        azifemAnalysis[i]->AddCorrFctn(avgSepTight[i]);
+        azifemAnalysis[i]->AddCorrFctn(splittingCutLoose[i]);
+        azifemAnalysis[i]->AddCorrFctn(fmrLoose[i]);
+        azifemAnalysis[i]->AddCorrFctn(avgSepLoose[i]);
     }
 
 
@@ -283,16 +313,21 @@ void PairCutAnalysis(const TString fileList = "AuAupions.list",
     for(Int_t i = 0; i <=1; i++)
     {
 
-        splittingCut[i]->Numerator2D()->Write();
-        splittingCut[i]->Denominator2D()->Write();
-        fmr[i]->Numerator2D()->Write();
-        fmr[i]->Denominator2D()->Write();
-        avgSep[i]->Numerator2D()->Write();
-        avgSep[i]->Denominator2D()->Write();
+        splittingCutTight[i]->Numerator2D()->Write();
+        splittingCutTight[i]->Denominator2D()->Write();
+        fmrTight[i]->Numerator2D()->Write();
+        fmrTight[i]->Denominator2D()->Write();
+        avgSepTight[i]->Numerator2D()->Write();
+        avgSepTight[i]->Denominator2D()->Write();
+        splittingCutLoose[i]->Numerator2D()->Write();
+        splittingCutLoose[i]->Denominator2D()->Write();
+        fmrLoose[i]->Numerator2D()->Write();
+        fmrLoose[i]->Denominator2D()->Write();
+        avgSepLoose[i]->Numerator2D()->Write();
+        avgSepLoose[i]->Denominator2D()->Write();
     } // End loop over pi+ / pi-
 
     histoOutput.Close();
 
     delete chain;
-  
 }

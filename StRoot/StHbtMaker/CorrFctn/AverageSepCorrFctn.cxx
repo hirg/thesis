@@ -77,25 +77,35 @@ StHbtString AverageSepCorrFctn::Report(){
 }
 //____________________________
 void AverageSepCorrFctn::AddRealPair(const StHbtPair* pair){
-
-  // MALisa July2000 - take explicit calculation of exit points and exit separation out of this
-  // class and put it into StHbtParticle and StHbtPair where they belong
-  //  StHbtThreeVector exitPt1 = FindExitPoint(pair->track1()->Helix());
-  //  StHbtThreeVector exitPt2 = FindExitPoint(pair->track2()->Helix());
-  //  StHbtThreeVector diff = exitPt1 - exitPt2;
-  //  double exitSep = diff.mag();
-
   double aveSep = pair->NominalTpcAverageSeparation();
-  double Qinv = fabs(pair->qInv());   // note - qInv() will be negative for identical pairs...
+  double fmr = pair->getFracOfMergedRow();
+  double quality = pair->quality();
 
-  mNumerator2D->Fill(Qinv,aveSep,1.0);
+  Bool_t pass = ( (quality >= qualityLo) &&
+                  (quality <= qualityHi) &&
+                  (fmr >= fmrLo) &&
+                  (fmr <= fmrHi) );
+
+    if( pass ) { 
+      double Qinv = fabs(pair->qInv());   // note - qInv() will be negative for identical pairs...
+      mNumerator2D->Fill(Qinv,aveSep,1.0);
+    }
 }
 //____________________________
 void AverageSepCorrFctn::AddMixedPair(const StHbtPair* pair){
 
   double aveSep = pair->NominalTpcAverageSeparation();
-  double Qinv = fabs(pair->qInv());   // note - qInv() will be negative for identical pairs...
+  double fmr = pair->getFracOfMergedRow();
+  double quality = pair->quality();
 
-  mDenominator2D->Fill(Qinv,aveSep,1.0);
+  Bool_t pass = ( (quality >= qualityLo) &&
+                  (quality <= qualityHi) &&
+                  (fmr >= fmrLo) &&
+                  (fmr <= fmrHi) );
+
+    if( pass ) { 
+      double Qinv = fabs(pair->qInv());   // note - qInv() will be negative for identical pairs...
+      mDenominator2D->Fill(Qinv,aveSep,1.0);
+    }
 }
 
