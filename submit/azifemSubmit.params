@@ -3,7 +3,7 @@
 # This whole section is optional
 source = /star/u/campbell/thesisAnalysis
 scratch = /gpfs/mnt/gpfs01/star/scratch/campbell
-output = ${scratch}/200GeV
+output = ${scratch}/193GeV
 
 [job_attributes]
 datasetSplitting = fileBased
